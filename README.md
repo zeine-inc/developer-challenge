@@ -46,9 +46,8 @@ Desenvolver 3 telas de um App de telemedicina, com base no protótipo e design f
 ## Entregáveis
 
 1. **Código-fonte**: Hospede o código-fonte do software em um repositório Git (GitHub, GitLab, etc.).
-2. **Documentação**: Forneça documentação detalhada.
-3. **Instruções de Execução**: Inclua instruções claras sobre como configurar e executar o software.
-4. **Demonstração Visual**: Adicione fotos ou vídeos do software em execução para demonstração.
+2. **Instruções de Execução**: Inclua instruções claras sobre como configurar e executar o software.
+3. **Demonstração Visual**: Adicione fotos ou vídeos do software em execução para demonstração.
 
 ---
 
