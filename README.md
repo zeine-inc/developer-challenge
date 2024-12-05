@@ -1,6 +1,6 @@
 # Desafio Prático para Desenvolvedor | Telemedicina
 
-![cover](./images/cover.jpg){width=800px}
+<img src="./images/cover.jpg" width="800px" />
 
 ## Objetivo
 
@@ -32,7 +32,7 @@ Desenvolver 3 telas de um App de telemedicina, com base no protótipo e design f
    - **About Doctor**: Tela com detalhes sobre os médicos, incluindo informações de perfil e especialidades.
    - **Outras telas**: Adicione uma mensagem secreta: “Boraa moeer!!”
 
-![Sig-In](./images/sign-in.jpg){height=800px} ![cover](./images/home.jpg){height=800px} ![cover](./images/details.jpg){height=800px}
+<img src="./images/sign-in.jpg" height="800px" /> <img src="./images/home.jpg" height="800px" /> <img src="./images/details.jpg" height="800px" />
 
 2. **Implantação do Banco de Dados**: Configure e implante o banco de dados escolhido.
 3. **Desenvolvimento do Back-end**: Implemente os endpoints necessários para gerenciar dados de usuários e médicos, utilizando FastAPI ou Nest.js.
