@@ -32,8 +32,8 @@ Desenvolver 3 telas de um App de telemedicina, com base no protótipo e design f
 
 2. **Implantação do Banco de Dados**: Configure e implante o banco de dados escolhido.
 3. **Desenvolvimento do Back-end**: Implemente os endpoints necessários para gerenciar dados de usuários e médicos, utilizando FastAPI ou Nest.js.
-4. **Desenvolvimento do Front-end**: Crie uma interface responsiva para dispositivos móveis, utilizando React Native ou Next.js, com as telas de Login, Home e About Doctor.
-5. **Autenticação**: Implemente a funcionalidade de autenticação de usuários, incluindo sign-in e sign-up, seguindo as melhores práticas de segurança.
+4. **Desenvolvimento do Front-end**: Crie uma interface responsiva para dispositivos móveis, com as telas de Login, Home e About Doctor.
+5. **Autenticação**: Implemente a funcionalidade de autenticação de usuários, seguindo as melhores práticas de segurança.
 
 **Diferenciais**
 
