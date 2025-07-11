@@ -1,66 +1,122 @@
-# Desafio Prático para Desenvolvedor | Telemedicina
+# 🚀 Desafio Técnico | Marketplace - Painel do Vendedor
 
-<img src="./images/cover.jpg" width="800px" />
+![Capa](./images/cover.jpg)
 
-## Objetivo
+## 🎯 Objetivo
 
-Desenvolver 3 telas de um App de telemedicina, com base no protótipo e design fornecidos. O software deve incluir integração com um backend para armazenamento de informações, autenticação de usuários e acesso a dados dos médicos.
+Desenvolver 3 telas de um sistema web para **gestão de produtos em um marketplace**, baseado no design fornecido via Figma.
 
-- **Protótipo**: Design do Figma, projeto da comunidade: [Link](https://www.figma.com/community/file/1337949757381065808)
+O sistema simula o **painel de controle de um vendedor**, onde é possível cadastrar, visualizar e gerenciar seus produtos.
 
-- **Prazo**: 5 dias, é o prazo para conclusão do desafio. Contados a partir da notificação do candidato.
+- **Protótipo Figma**:
+  [https://www.figma.com/community/file/1405890943950015706](https://www.figma.com/community/file/1405890943950015706)
 
-- **Stacks Obrigatórias**:
-
-  - _Nenhuma_: O candidato pode escolher as tecnologias que deseja utilizar.
-
-- **Stacks Recomendadas (não obrigatórias)**:
-  - _Front-end_: React-Native ou Next.js
-  - _Back-end_: FastAPI ou Nest.js
-  - _Banco de dados_: PostgreSQL ou MongoDB
+- **Prazo de entrega**:
+  Até **segunda-feira às 11h (horário de Brasília)**.
 
 ---
 
-## Requisitos
+## 📌 Requisitos
 
-**Essenciais**
+### Funcionalidades obrigatórias
 
-1. **Funcionalidades do software**: As seguintes telas e funcionalidades são essenciais:
+As seguintes telas e recursos devem ser implementados:
 
-   - **Login**: Tela de autenticação de usuários, permitindo sign-in.
-   - **Home**: Tela de _HOME_ com informações gerais e navegação para as outras telas.
-   - **About Doctor**: Tela com detalhes sobre os médicos, incluindo informações de perfil e especialidades.
-   - **Outras telas**: Adicione uma mensagem secreta: “Boraa moeer!!”
+1. **Tela de Login**
 
-     <img src="./images/sign-in.jpg" height="500px" /> <img src="./images/home.jpg" height="500px" /> <img src="./images/details.jpg" height="500px" />
+   - Autenticação com e-mail e senha.
+   - Validação de campos.
 
-2. **Implantação do Banco de Dados**: Configure e implante o banco de dados escolhido.
-3. **Desenvolvimento do Back-end**: Implemente os endpoints necessários para gerenciar dados de usuários e médicos.
-4. **Desenvolvimento do Front-end**: Crie uma interface responsiva para dispositivos móveis, com as telas de Login, Home e About Doctor.
-5. **Autenticação**: Implemente a funcionalidade de autenticação de usuários, seguindo as melhores práticas de segurança.
+2. **Tela de Listagem de Produtos**
 
-**Diferenciais**
+   - Exibe todos os produtos cadastrados.
+   - Permite filtrar por texto e status (ativo, inativo, vendido, etc).
+   - Produtos exibidos com imagem, preço, descrição e status.
 
-1. **Estrutura ERD**: Desenvolva um diagrama de entidade-relacionamento (ERD) para modelar os dados do software.
-2. **Testes Automatizados**: Crie testes automatizados para o back-end e front-end.
-3. **Documentação Abrangente**: Forneça documentação clara e detalhada explicando a estrutura do banco de dados, a implementação dos endpoints do back-end, a autenticação e qualquer outra parte relevante do código.
+3. **Tela de Cadastro de Produto**
 
----
+   - Upload de imagem do produto.
+   - Título, descrição, valor e categoria.
+   - Botões para **Salvar e Publicar** ou **Cancelar**.
 
-## Entregáveis
+4. **Backend Funcional**
 
-1. **Código-fonte**: Hospede o código-fonte do software em um repositório Git (GitHub, GitLab, etc.).
-2. **Instruções de Execução**: Inclua instruções claras sobre como configurar e executar o software.
-3. **Demonstração Visual**: Adicione fotos ou vídeos do software em execução para demonstração.
+   - Deve suportar o armazenamento de usuários, autenticação, produtos e suas categorias/status.
 
----
+5. **Banco de dados**
 
-## Observações
+   - PostgreSQL ou MongoDB (ou outro de sua escolha, se bem justificado).
 
-- Este desafio tem o objetivo de avaliar suas habilidades técnicas, sua capacidade de desenvolver uma aplicação completa e sua compreensão de conceitos modernos de desenvolvimento.
-- A ênfase principal será na qualidade da entrega, incluindo a clareza do código, a organização do projeto, a eficiência das soluções implementadas.
-- Caso encontre algum problema ou tenha dúvidas durante o desenvolvimento, sinta-se à vontade para entrar em contato conosco para esclarecimentos adicionais.
+6. **Mensagem secreta**
+
+   - Ao manter o mouse sobre o botão “Novo produto” por 7 segundos, surge um tooltip especial:
+     `“Tá esperando o quê? Boraa moeer!! 🚀”`
 
 ---
 
-Boa sorte e estamos ansiosos para ver o que você vai criar! ☀🚀
+### Diferenciais (opcionais, mas recomendados)
+
+1. **Deploy**
+
+   - Publique o front-end (ex: Vercel) e o back-end (ex: Render) se possível.
+   - Inclua os links no README.
+
+2. **Documentação**
+
+   - Explique a estrutura do projeto, como executar, e decisões técnicas.
+
+3. **Testes automatizados**
+
+   - Testes simples de integração (API) e/ou de componentes (UI).
+
+4. **Diagrama ERD**
+
+   - Um pequeno diagrama mostrando entidades e relações (usuários, produtos, categorias).
+
+---
+
+## 🛠️ Stacks recomendadas
+
+Você pode usar qualquer tecnologia, mas sugerimos:
+
+- **Frontend**: Next.js ou React (web)
+- **Backend**: FastAPI ou NestJS
+- **Banco de dados**: PostgreSQL ou MongoDB
+
+---
+
+## 📦 Entregáveis
+
+1. **Repositório com o código-fonte**
+
+   - GitHub, GitLab ou Bitbucket.
+
+2. **Instruções de execução**
+
+   - Como rodar o frontend e backend localmente.
+   - Se possível, um script ou Docker.
+
+3. **Demonstração visual**
+
+   - Imagens ou vídeo da aplicação em funcionamento.
+
+4. **(Opcional) Link do Deploy**
+
+   - Front e/ou back publicado.
+
+---
+
+## 🔍 O que será avaliado
+
+- Organização e clareza do código
+- Estrutura do projeto
+- Boas práticas de autenticação e manipulação de dados
+- UX simples e funcional
+- Atenção aos detalhes (como a mensagem secreta 👀)
+
+---
+
+## 📩 Dúvidas?
+
+Se tiver qualquer dúvida durante o desafio, envie uma mensagem. Estamos aqui para ajudar. Boa sorte e...
+**Boraa moeer!! 🔥🚀**
