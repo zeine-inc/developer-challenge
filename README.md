@@ -1,4 +1,4 @@
-# 🚀 Desafio Técnico | Marketplace - Painel do Vendedor
+# Desafio Técnico | Marketplace - Painel do Vendedor 🤑
 
 ![Capa](./images/cover.jpg)
 
