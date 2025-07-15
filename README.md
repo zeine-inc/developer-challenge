@@ -12,7 +12,7 @@ O sistema simula o **painel de controle de um vendedor**, onde é possível cada
   [https://www.figma.com/community/file/1405890943950015706](https://www.figma.com/community/file/1405890943950015706)
 
 - **Prazo de entrega**:
-  Até **sexta-feira às 23h**.
+  4 dias a partir do recebimento.
 
 ---
 
