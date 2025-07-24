@@ -1,4 +1,4 @@
-# Desafio Técnico | Marketplace - Painel do Vendedor 🤑
+# Desafio Técnico | Guard - Gerenciador de Contatos 💂‍♂️
 
 ![Capa](./images/cover.jpg)
 
