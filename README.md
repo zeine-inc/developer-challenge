@@ -4,12 +4,12 @@
 
 ## 🎯 Objetivo
 
-Desenvolver 3 telas de um sistema web para **gestão de produtos em um marketplace**, baseado no design fornecido via Figma.
+Desenvolver 3 telas de um sistema web para **gestão de contatos em um marketplace**, baseado no design fornecido via Figma.
 
-O sistema simula o **painel de controle de um vendedor**, onde é possível cadastrar, visualizar e gerenciar seus produtos.
+O sistema simula o **painel de controle de um vendedor**, onde é possível cadastrar, visualizar e gerenciar seus contatos.
 
 - **Protótipo Figma**:
-  [https://www.figma.com/community/file/1405890943950015706](https://www.figma.com/community/file/1405890943950015706)
+  [https://www.figma.com/community/file/1426246785677931248](https://www.figma.com/community/file/1426246785677931248)
 
 - **Prazo de entrega**:
   4 dias a partir do recebimento.
@@ -27,21 +27,21 @@ As seguintes telas e recursos devem ser implementados:
    - Autenticação com e-mail e senha.
    - Validação de campos.
 
-2. **Tela de Listagem de Produtos**
+2. **Tela de Listagem de Contatos**
 
-   - Exibe todos os produtos cadastrados.
-   - Permite filtrar por texto e status (ativo, inativo, vendido, etc).
-   - Produtos exibidos com imagem, preço, descrição e status.
+   - Exibe todos os contatos cadastrados.
+   - Permite filtro por letra inicial do nome.
+   - Contatos exibidos com foto, nome, telefone e e-mail.
 
-3. **Tela de Cadastro de Produto**
+3. **Tela de Cadastro de Contato**
 
-   - Upload de imagem do produto.
-   - Título, descrição, valor e categoria.
-   - Botões para **Salvar e Publicar** ou **Cancelar**.
+   - Upload de foto do contato.
+   - Campos para nome, telefone, e-mail.
+   - Botões para **Salvar** ou **Cancelar**.
 
 4. **Backend Funcional**
 
-   - Deve suportar o armazenamento de usuários, autenticação, produtos e suas categorias/status.
+   - Deve suportar o armazenamento de usuários, autenticação, contatos e seus atributos.
 
 5. **Banco de dados**
 
@@ -49,7 +49,7 @@ As seguintes telas e recursos devem ser implementados:
 
 6. **Mensagem secreta**
 
-   - Ao manter o mouse sobre o botão “Novo produto” por 7 segundos, surge um tooltip especial:
+   - Ao manter o mouse sobre o botão “Adicionar contato” por 7 segundos, surge um tooltip especial:
      `“Tá esperando o quê? Boraa moeer!! 🚀”`
 
 ---
@@ -71,7 +71,7 @@ As seguintes telas e recursos devem ser implementados:
 
 4. **Diagrama ERD**
 
-   - Um pequeno diagrama mostrando entidades e relações (usuários, produtos, categorias).
+   - Um pequeno diagrama mostrando entidades e relações (usuários, contatos, atributos).
 
 ---
 
