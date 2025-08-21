@@ -2,6 +2,8 @@
 
 body {
   font-family: "Schibsted Grotesk", regular;
+  background: #111111;
+  overflow: hidden;
 }
 
 :root {
