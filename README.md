@@ -1,11 +1,18 @@
-# Painel de Controle de um Vendedor
+# Painel de Controle de Vendedor
 
-## Modelagem do Banco de Dados
+Este projeto é um **Painel de Controle para Vendedores**, permitindo que vendedores se cadastrem, façam login e gerenciem seus contatos.
 
-O banco de dados é composto por duas entidades principais: **Vendedor** e **Contato**.  
-Estas entidades possuem um relacionamento **muitos-para-muitos**, que é representado por uma tabela intermediária chamada **VENDEDOR_CONTATO**.
+---
 
-Utilizamos a notação **Crow’s Foot** para representar os relacionamentos, que é uma forma padrão de modelagem de bancos de dados relacionais.
+## 🔹 Modelagem do Banco de Dados
+
+O banco de dados possui três tabelas principais:
+
+- **VENDEDOR**: armazena os dados do vendedor.
+- **CONTATO**: armazena os contatos gerenciados pelo vendedor.
+- **VENDEDOR_CONTATO**: tabela intermediária que representa o relacionamento muitos-para-muitos entre vendedores e contatos.
+
+### Diagrama ER (Crow’s Foot)
 
 ```mermaid
 erDiagram
@@ -31,4 +38,24 @@ erDiagram
 
     VENDEDOR ||--o{ VENDEDOR_CONTATO : "tem"
     CONTATO ||--o{ VENDEDOR_CONTATO : "é gerenciado"
+```
+
+## 🔹 Endpoints da API
+
+### 1. Login
+
+O **vendedor** pode fazer login utilizando email e senha.
+
+```python
+@app.post("/login")
+def login_vendedor(vendedor: VendedorLogin)
+```
+
+### 2. Cadastro
+
+O vendedor pode se cadastrar utilizando **nome**, **email** e **senha**.
+
+```python
+@app.post("/cadastro")
+def cadastrar_vendedor(vendedor: VendedorLogin):
 ```
