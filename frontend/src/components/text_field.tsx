@@ -22,7 +22,7 @@ export default function TextField({
   return (
     <div className="flex flex-col gap-1">
       {/* Label */}
-      <label className="text-sm text-[var(--placeholder)] text-[0.875rem] leading-[1.5rem]">
+      <label className="font-semibold text-[var(--body)] text-[0.875rem] leading-[1.5rem]">
         {label}
       </label>
 
