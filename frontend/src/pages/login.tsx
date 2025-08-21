@@ -1,4 +1,5 @@
 import { PageApresentacao } from "../components/pagina_apresentacao";
+import { LinkSingLog } from "../components/link_singlog";
 import TextField from "../components/text_field";
 import Button, { ButtonVariant } from "../components/button";
 
@@ -8,12 +9,7 @@ export function PageLogin() {
       <PageApresentacao />
 
       <section className="bg-[var(--background-secondary)] w-[30vw] h-screen flex flex-col justify-center px-25">
-        <p className="text-right text-[0.75rem] mb-8 text-[var(--body)]">
-          Não tem uma conta?{" "}
-          <a className="text-[var(--brand)] text-[0.75rem] font-medium cursor-pointer">
-            Criar conta
-          </a>
-        </p>
+        <LinkSingLog page="Login" />
 
         <div className="max-w-sm mx-auto w-full space-y-6 my-[15rem]">
           <h2 className="text-2xl text-[1.5rem] font-bold mb-6 text-[var(--primary)]">
