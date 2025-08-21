@@ -1,12 +1,22 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
-from database.database import engine, Vendedor
+from database.database import engine, Vendedor, Contato
 from models.models import VendedorCreate, VendedorLogin
 from utils.criptografar import hash_senha, criptografar_email, verificar_senha
+import cloudinary
+import cloudinary.uploader
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv()
+
+cloudinary.config(
+    cloudinary_url=getenv("CLOUDINARY_URL"),
+    secure=True
+)
 
 app = FastAPI()
-
 
 # Sessão do SQLAlchemy
 SessionLocal = sessionmaker(bind=engine, autoflush=False)
@@ -41,7 +51,7 @@ def login_vendedor(vendedor: VendedorLogin):
         vendedor_login = db.query(Vendedor).filter(
             Vendedor.email == email_codificado
         ).first()
-        
+
         if not vendedor_login:
             raise HTTPException(status_code=402, detail="Credenciais incorretas")
         
@@ -49,7 +59,62 @@ def login_vendedor(vendedor: VendedorLogin):
         if not verificar_senha(vendedor.senha, vendedor_login.senha):
             raise HTTPException(status_code=401, detail="Senha incorreta")
         
-        return {"status": 200}
+        return {"status": 200, "id": vendedor_login.id}
     finally:
         db.close()
 
+@app.post("/cadastrarContato")
+async def cadastrar_contatos(
+    vendedor_id: int,
+    nome: str = Form(...),
+    email: str = Form(...),
+    telefone: str = Form(...),
+    foto: UploadFile = File(...)
+):
+    db = SessionLocal()
+
+    vendedor = db.query(Vendedor).filter(Vendedor.id == vendedor_id).first()
+
+    if not vendedor:
+        raise HTTPException(status_code=404, detail="Vendedor não encontrado")
+    
+    try:
+        # Verificação de duplicidade de contato
+        contato = db.query(Contato).filter(
+            (Contato.email == email) | (Contato.telefone == telefone)
+        ).first()
+
+        if not contato:
+            resultado_upload = cloudinary.uploader.upload(foto.file)
+            url_imagem = resultado_upload.get("secure_url")
+            if not url_imagem:
+                raise HTTPException(status_code=500, detail="Erro ao fazer upload da imagem")
+
+            contato = Contato(
+                nome=nome,
+                email=email,
+                telefone=telefone,
+                foto=url_imagem
+            )
+            db.add(contato)
+            db.commit()
+            db.refresh(contato)
+
+        # Vinculação de contato ao vendedor
+        if contato not in vendedor.contatos:
+            vendedor.contatos.append(contato)
+            db.commit()
+
+        return {
+            "status": 200,
+            "contato_id": contato.id,
+            "vendedor_id": vendedor.id,
+            "nome": contato.nome,
+            "email": contato.email,
+            "telefone": contato.telefone,
+            "foto": contato.foto
+        }
+
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Erro de integridade no banco de dados")
