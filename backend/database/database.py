@@ -20,19 +20,19 @@ vendedor_contato = Table(
 class Vendedor(Base):
     __tablename__ = 'vendedor'
     id = Column(Integer, primary_key=True)
-    nome = Column(String, nullable=False)
-    email = Column(String, nullable=False, unique=True)
-    senha = Column(String, nullable=False)
+    nome = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=False, unique=True)
+    senha = Column(String(255), nullable=False)
     contatos = relationship('Contato', secondary=vendedor_contato, back_populates='vendedores')
 
-# Class que compreende a entidade Contato
+# Classe que compreende a entidade Contato
 class Contato(Base):
     __tablename__ = 'contato'
     id = Column(Integer, primary_key=True)
-    nome = Column(String, nullable=False)
-    email = Column(String)
-    telefone = Column(String)
-    foto = Column(String)
+    nome = Column(String(255), nullable=False)
+    email = Column(String(255), unique=True)
+    telefone = Column(String(255), unique=True)
+    foto = Column(String(255))
     vendedores = relationship('Vendedor', secondary=vendedor_contato, back_populates='contatos')
 
 # Criar tabelas
