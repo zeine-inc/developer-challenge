@@ -177,3 +177,28 @@ async def editar_contato(
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=400, detail="Erro de integridade no banco de dados")
+    
+@app.get("/vendedor/{vendedor_id}/contatos")
+def listar_contatos_vendedor(
+    vendedor_id: int = Path(...),
+):
+    db = SessionLocal()
+
+    # Verifica se o vendedor existe
+    vendedor = db.query(Vendedor).filter(Vendedor.id == vendedor_id).first()
+    if not vendedor:
+        raise HTTPException(status_code=404, detail="Vendedor não encontrado")
+    
+    # Acessa os contatos associados via relacionamento
+    contatos = [
+        {
+            "id": contato.id,
+            "nome": contato.nome,
+            "email": contato.email,
+            "telefone": contato.telefone,
+            "foto": contato.foto
+        }
+        for contato in vendedor.contatos
+    ]
+
+    return {"status": 200, "contatos": contatos}
