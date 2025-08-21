@@ -2,8 +2,8 @@ from fastapi import FastAPI, HTTPException
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 from database.database import engine, Vendedor
-from models.models import VendedorCreate
-from utils.criptografar import hash_senha, criptografar_email
+from models.models import VendedorCreate, VendedorLogin
+from utils.criptografar import hash_senha, criptografar_email, verificar_senha
 
 app = FastAPI()
 
@@ -29,3 +29,27 @@ def cadastrar_vendedor(vendedor: VendedorCreate):
         raise HTTPException(status_code=400, detail="Email já cadastrado")
     finally:
         db.close()
+
+@app.post("/login")
+def login_vendedor(vendedor: VendedorLogin):
+    db = SessionLocal()
+
+    try:
+        # Verificar e-mail
+        email_codificado = criptografar_email(vendedor.email)
+
+        vendedor_login = db.query(Vendedor).filter(
+            Vendedor.email == email_codificado
+        ).first()
+        
+        if not vendedor_login:
+            raise HTTPException(status_code=402, detail="Credenciais incorretas")
+        
+        # Verifica a senha
+        if not verificar_senha(vendedor.senha, vendedor_login.senha):
+            raise HTTPException(status_code=401, detail="Senha incorreta")
+        
+        return {"status": 200}
+    finally:
+        db.close()
+
