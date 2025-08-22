@@ -9,12 +9,18 @@ import CancelRed from "../../public/icons/cancel_red.png";
 import RightActive from "../../public/icons/right_active.png";
 
 import { emailValido, validarSenha } from "../utils/validar";
+import { cadastrar } from "../service/service";
 
 export function PageCadastro() {
   const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [senha, setSenha] = useState<string>("");
   const [senhaConfirmada, setSenhaConfirmada] = useState<string>("");
+
+  // Mensagens para feedback do cadastro ao vendedor
+  const [cadastroBool, setCadastro] = useState<boolean>(false);
+  const [mensagemVisivel, setVisibilidade] = useState<boolean>(false);
+  const [mensagem, setMensagem] = useState<string>("");
 
   const regras = [
     {
@@ -30,6 +36,29 @@ export function PageCadastro() {
       valido: senha.length > 0 && senha === senhaConfirmada,
     },
   ];
+
+  const fazerCadastro = async () => {
+    const responseStatus = await cadastrar({
+      nome: nome,
+      senha: senha,
+      email: email,
+    });
+
+    if (responseStatus === 200) {
+      setMensagem("Cadastro realizado");
+      setCadastro(true);
+    } else if (responseStatus === 400) {
+      setMensagem("E-mail já cadastrado");
+      setEmail("");
+    } else if (responseStatus === 422) {
+      setMensagem("E-mail inválido");
+      setEmail("");
+    } else {
+      setMensagem("Erro ao cadastrar");
+    }
+
+    setVisibilidade(true);
+  };
 
   return (
     <main className="flex h-screen">
@@ -97,8 +126,22 @@ export function PageCadastro() {
         </section>
         {/* Botão criar conta */}
         <div className="mt-6 w-full flex justify-end">
-          <Button label="Criar conta" variant={ButtonVariant.Primary} />
+          <Button
+            label="Criar conta"
+            variant={ButtonVariant.Primary}
+            onClick={fazerCadastro}
+          />
         </div>
+        <p
+          className={
+            mensagemVisivel
+              ? `text-[0.875rem] font-bold w-full text-center my-[1rem] ${
+                  cadastroBool ? "text-[var(--brand)]" : "text-[var(--red)]"
+                }`
+              : "opacity-0"
+          }>
+          {mensagem}
+        </p>
       </section>
     </main>
   );
