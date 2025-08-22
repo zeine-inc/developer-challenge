@@ -10,7 +10,8 @@ Base = declarative_base()
 vendedor_contato = Table(
     'vendedor_contato', Base.metadata,
     Column('id_vendedor', Integer, ForeignKey('vendedor.id'), primary_key=True),
-    Column('id_contato', Integer, ForeignKey('contato.id'), primary_key=True)
+    Column('id_contato', Integer, ForeignKey('contato.id'), primary_key=True),
+    Column('relacao', String(255))
 )
 
 class Vendedor(Base):
