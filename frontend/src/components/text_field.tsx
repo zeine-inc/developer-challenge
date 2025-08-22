@@ -23,6 +23,11 @@ export default function TextField({
 }: TextFieldProps) {
   const [isFocused, setIsFocused] = useState(false);
 
+  // Validação para gerar borda de erro
+  const [touched, setTouched] = useState(false);
+
+  const showError = touched && error;
+
   return (
     <div className="flex flex-col gap-1">
       {/* Label */}
@@ -36,13 +41,16 @@ export default function TextField({
         placeholder={placeholder}
         value={input}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={() => {
+          setIsFocused(false);
+          setTouched(true);
+        }}
         onChange={(e) => onChange(e.target.value)}
         className={`rounded-xl p-3 bg-[var(--background-secondary)] text-[0.75rem] leading-[1.25rem]
           text-[var(--placeholder)] outline-none
           border 
           ${
-            error
+            showError
               ? "border-[var(--red)]" // erro
               : isFocused
               ? "border-[var(--brand)]" // active (focus)
