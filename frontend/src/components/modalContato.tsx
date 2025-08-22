@@ -60,8 +60,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
 
       if (responseStatus === 200) {
         setLabelButton("Contato Salvo");
-
-        setTimeout(() => setLabelButton("Salvar"), 2000);
+        setTimeout(() => onClose(), 1000);
       } else {
         setLabelButton("Erro ao salvar");
         setTimeout(() => setLabelButton("Salvar"), 2000);
