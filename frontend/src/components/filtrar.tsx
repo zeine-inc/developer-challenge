@@ -12,8 +12,13 @@ export default function FiltroAlfabeto({
   const [selecionada, setSelecionada] = useState<string | null>(null);
 
   const selecionar = (letra: string) => {
-    onSelecionar(letra);
-    setSelecionada(letra);
+    if (selecionada === letra) {
+      onSelecionar("");
+      setSelecionada(null);
+    } else {
+      onSelecionar(letra);
+      setSelecionada(letra);
+    }
   };
 
   return (
