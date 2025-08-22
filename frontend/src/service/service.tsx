@@ -44,9 +44,10 @@ export async function login({ ...props }: InterfaceLogin) {
 
     if (response.ok) {
       await pegarContatos(data.id);
-      localStorage.setItem("email", props.email);
-      localStorage.setItem("id", data.id);
-      localStorage.setItem("nome", data.nome);
+      sessionStorage.setItem("email", props.email);
+      sessionStorage.setItem("id", data.id);
+      sessionStorage.setItem("senha", props.senha);
+      sessionStorage.setItem("nome", data.nome);
       return response.status;
     } else {
       console.error(data);
@@ -65,12 +66,12 @@ export async function pegarContatos(id_vendedor: number) {
     const data = await response.json();
 
     if (response.ok) {
-      localStorage.setItem("contatos", JSON.stringify(data.contatos));
+      sessionStorage.setItem("contatos", JSON.stringify(data.contatos));
     } else {
-      localStorage.setItem("contatos", "[]");
+      sessionStorage.setItem("contatos", "[]");
     }
   } catch (e) {
     console.error(`Erro ao solicitar os contatos: ${e}`);
-    localStorage.setItem("contatos", "[]");
+    sessionStorage.setItem("contatos", "[]");
   }
 }
