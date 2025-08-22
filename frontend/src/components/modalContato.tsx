@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import type { Contato } from "../interfaces/interfaces";
+import ImageUploader from "./imagem_uploader";
 
 import Fechar from "../../public/icons/cancel.png";
 import Perfil from "../../public/images/perfil.png";
@@ -62,13 +63,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
         <hr className="h-px w-[90%] my-3 bg-white" />
 
         <div className="flex flex-col justify-center items-center gap-5">
-          <img src={imagem} className="w-[4.5rem] h-[4.5rem] rounded-xl" />
-          <Button
-            variant={ButtonVariant.Tertiary}
-            label={
-              tipo.toLowerCase() == "add" ? "+ Adicionar Foto" : "Substituir"
-            }
-          />
+          <ImageUploader imagemContato={imagem} />
         </div>
 
         {/* Input senha */}
