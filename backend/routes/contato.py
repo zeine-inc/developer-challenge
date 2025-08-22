@@ -19,7 +19,7 @@ async def cadastrar_contatos(
 ):
     db = SessionLocal()
 
-    vendedor = db.query(Vendedor).filter(Vendedor.id == vendedor_id).first()
+    vendedor = db.query(Vendedor).filter(Vendedor.id == int(vendedor_id)).first()
 
     if not vendedor:
         raise HTTPException(status_code=404, detail="Vendedor não encontrado")
