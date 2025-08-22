@@ -1,9 +1,14 @@
-function App() {
+import { Routes, Route } from "react-router-dom";
+import { myRoutes } from "./utils/routes";
+
+export default function App() {
   return (
     <>
-      <p>Olá mundo!</p>
+      <Routes>
+        {myRoutes.map((route) => (
+          <Route path={route.path} element={route.element} />
+        ))}
+      </Routes>
     </>
   );
 }
-
-export default App;
