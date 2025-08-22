@@ -8,6 +8,8 @@ interface TextFieldProps {
   type: HTMLInputTypeAttribute;
   placeholder: string;
   error?: boolean;
+  input: string;
+  onChange: (value: string) => void;
 }
 
 export default function TextField({
@@ -16,6 +18,8 @@ export default function TextField({
   type,
   placeholder,
   error = false,
+  input,
+  onChange,
 }: TextFieldProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -30,8 +34,10 @@ export default function TextField({
       <input
         type={type}
         placeholder={placeholder}
+        value={input}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onChange={(e) => onChange(e.target.value)}
         className={`rounded-xl p-3 bg-[var(--background-secondary)] text-[0.75rem] leading-[1.25rem]
           text-[var(--placeholder)] outline-none
           border 
@@ -39,7 +45,7 @@ export default function TextField({
             error
               ? "border-[var(--red)]" // erro
               : isFocused
-              ? "border-lime-400" // active (focus)
+              ? "border-[var(--brand)]" // active (focus)
               : "border-[var(--border-primary)] hover:border-[var(--placeholder)]" // default + hover
           }`}
       />
