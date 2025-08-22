@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button, { ButtonVariant } from "../components/button";
 import IconButton from "../components/iconbutton";
 import ModalInformacoes from "./modalInformacoes";
+import { excluirContato } from "../service/service";
 
 import type { Contato } from "../interfaces/interfaces";
 
@@ -59,6 +60,28 @@ export default function TabelaContatos({
     }
   };
 
+  const removerContato = async (contatoId: number) => {
+    const vendedorId = sessionStorage.getItem("id")!;
+    const status = await excluirContato(vendedorId, contatoId);
+
+    if (status === 200) {
+      // Atualiza sessionStorage
+      const contatosSession = sessionStorage.getItem("contatos");
+      if (contatosSession) {
+        const contatos: Contato[] = JSON.parse(contatosSession);
+        const novosContatos = contatos.filter((c) => c.id !== contatoId);
+        sessionStorage.setItem("contatos", JSON.stringify(novosContatos));
+      }
+
+      // Re-render
+      setDesbloqueados((prev) =>
+        prev.filter((_, idx) => contatosFiltrados[idx]?.id !== contatoId)
+      );
+    } else {
+      console.error("Erro ao excluir contato");
+    }
+  };
+
   if (contatos.length === 0) {
     return (
       <div className="text-center text-[var(--muted)] text-[1rem] py-10">
@@ -69,7 +92,7 @@ export default function TabelaContatos({
 
   return (
     <>
-      <table className="w-full ml-8 border-separate border-spacing-0">
+      <table className="w-full ml-8 border-separate border-spacing-0 overflow-x-hidden overflow-y-scroll">
         <thead>
           <tr className="text-left">
             <th className="text-[var(--muted)] text-[0.75rem] font-bold w-[40%] pb-4">
@@ -140,7 +163,7 @@ export default function TabelaContatos({
                     <IconButton
                       imagem={Lixeira}
                       ativo={false}
-                      onClick={() => {}}
+                      onClick={() => removerContato(contato.id)}
                     />
                   </div>
                 </td>
