@@ -96,6 +96,7 @@ export default function PageInicio() {
                 }
               }}
               desbloquearTodos={desbloquearTodos}
+              filtrar={letraFiltar}
             />
           </div>
         </div>

@@ -12,11 +12,13 @@ import Lixeira from "../../public/icons/remove.png";
 interface TabelaContatosProps {
   onEditar: (contato: Contato) => void;
   desbloquearTodos: boolean;
+  filtrar: string;
 }
 
 export default function TabelaContatos({
   onEditar,
   desbloquearTodos,
+  filtrar,
 }: TabelaContatosProps) {
   const contatosSession = sessionStorage.getItem("contatos");
   const contatos: Contato[] = contatosSession
@@ -27,6 +29,19 @@ export default function TabelaContatos({
   const [contatoAtualIdx, setContatoAtualIdx] = useState<number | null>(null);
   const [desbloqueados, setDesbloqueados] = useState<number[]>([]);
 
+  const contatosFiltrados = contatos
+    .filter((c) =>
+      filtrar ? c.nome.toUpperCase().startsWith(filtrar.toUpperCase()) : true
+    )
+    .sort((a, b) => a.nome.localeCompare(b.nome));
+
+  if (contatosFiltrados.length === 0) {
+    return (
+      <div className="text-center text-[var(--muted)] text-[1rem] py-10">
+        Nenhum contato encontrado 🙂
+      </div>
+    );
+  }
   const abrirModalOuBloquear = (idx: number) => {
     if (desbloqueados.includes(idx)) {
       setDesbloqueados((prev) => prev.filter((i) => i !== idx));
@@ -71,7 +86,7 @@ export default function TabelaContatos({
         </thead>
 
         <tbody>
-          {contatos.map((contato, idx) => {
+          {contatosFiltrados.map((contato, idx) => {
             const desbloqueado =
               desbloqueados.includes(idx) || desbloquearTodos;
 
