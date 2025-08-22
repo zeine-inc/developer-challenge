@@ -5,7 +5,7 @@ interface LinkSingLog {
   page: "Cadastro" | "Login";
 }
 
-export function LinkSingLog({ href, page }: LinkSingLog) {
+export default function LinkSingLog({ href, page }: LinkSingLog) {
   return (
     <p className="text-right text-[0.75rem] mb-8 text-[var(--body)]">
       {page == "Cadastro" ? "Já tem uma conta?" : "Não tem uma conta?"}

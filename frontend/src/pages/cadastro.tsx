@@ -1,12 +1,13 @@
 import { useState } from "react";
 
-import { PageApresentacao } from "../components/pagina_apresentacao";
-import { LinkSingLog } from "../components/link_singlog";
+import PageApresentacao from "../components/pagina_apresentacao";
+import LinkSingLog from "../components/link_singlog";
 import TextField from "../components/text_field";
 import Button, { ButtonVariant } from "../components/button";
 
 import CancelRed from "../../public/icons/cancel_red.png";
 import RightActive from "../../public/icons/right_active.png";
+
 import { emailValido, validarSenha } from "../utils/validar";
 
 export function PageCadastro() {

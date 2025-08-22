@@ -1,9 +1,16 @@
-import { PageApresentacao } from "../components/pagina_apresentacao";
-import { LinkSingLog } from "../components/link_singlog";
+import { useState } from "react";
+
+import PageApresentacao from "../components/pagina_apresentacao";
+import LinkSingLog from "../components/link_singlog";
 import TextField from "../components/text_field";
 import Button, { ButtonVariant } from "../components/button";
 
+import { emailValido } from "../utils/validar";
+
 export function PageLogin() {
+  const [email, setEmail] = useState<string>("");
+  const [senha, setSenha] = useState<string>("");
+
   return (
     <main className="flex h-screen">
       <PageApresentacao />
@@ -20,12 +27,17 @@ export function PageLogin() {
             placeholder="Digite seu e-mail"
             label="E-mail"
             type="text"
+            input={email}
+            onChange={setEmail}
+            error={!emailValido(email)}
           />
 
           <TextField
             placeholder="Insira sua senha"
             label="Senha"
             type="password"
+            input={senha}
+            onChange={setSenha}
           />
 
           <div className="w-full flex justify-end">
