@@ -124,3 +124,23 @@ function adicionarContatoNaSession(data: any) {
     console.error(`Erro ao atualizar contatos na session: ${e}`);
   }
 }
+
+export async function excluirContato(vendedor_id: string, contato_id: number) {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/exlcuirContato", {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        vendedor_id: Number(vendedor_id),
+        contato_id: contato_id,
+      }),
+    });
+
+    return response.status;
+  } catch (e) {
+    console.error(`Erro ao excluir o contato: ${e}`);
+    return 500;
+  }
+}
