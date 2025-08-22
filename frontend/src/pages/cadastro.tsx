@@ -1,14 +1,33 @@
+import { useState } from "react";
+
 import { PageApresentacao } from "../components/pagina_apresentacao";
 import { LinkSingLog } from "../components/link_singlog";
 import TextField from "../components/text_field";
 import Button, { ButtonVariant } from "../components/button";
+
 import CancelRed from "../../public/icons/cancel_red.png";
+import RightActive from "../../public/icons/right_active.png";
+import { emailValido, validarSenha } from "../utils/validar";
 
 export function PageCadastro() {
-  const validacoesSenha: string[] = [
-    "Pelo menor 8 caracteres",
-    "Contéum um número ou símbolo",
-    "As senhas devem ser iguais",
+  const [nome, setNome] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [senha, setSenha] = useState<string>("");
+  const [senhaConfirmada, setSenhaConfirmada] = useState<string>("");
+
+  const regras = [
+    {
+      texto: "Pelo menos 8 caracteres",
+      valido: senha.length >= 8,
+    },
+    {
+      texto: "Contém um número ou símbolo",
+      valido: validarSenha(senha),
+    },
+    {
+      texto: "As senhas devem ser iguais",
+      valido: senha.length > 0 && senha === senhaConfirmada,
+    },
   ];
 
   return (
@@ -25,33 +44,56 @@ export function PageCadastro() {
           </h2>
 
           <TextField
+            input={nome}
+            onChange={setNome}
             placeholder="Como você se chama?"
             label="Nome"
             type="text"
           />
-          <TextField placeholder="Seu e-mail aqui" label="E-mail" type="text" />
           <TextField
+            input={email}
+            onChange={setEmail}
+            placeholder="Seu e-mail aqui"
+            label="E-mail"
+            type="text"
+            error={!emailValido(email)}
+          />
+          <TextField
+            input={senha}
+            onChange={setSenha}
             placeholder="Escolha uma senha segura"
             label="Senha"
             type="password"
+            error={!validarSenha(senha)}
           />
           <TextField
+            input={senhaConfirmada}
+            onChange={setSenhaConfirmada}
             placeholder="Repita sua senha para confirmar"
             label="Repetir a senha"
             type="password"
+            error={senhaConfirmada !== senha}
           />
         </div>
 
         {/* Validações de senha */}
         <section className="w-full mt-4 space-y-2">
-          {validacoesSenha.map((validacao, index) => (
+          {regras.map((regra, index) => (
             <div key={index} className="flex items-center gap-2">
-              <img className="w-[1rem] h-[1rem]" src={CancelRed} alt="erro" />
-              <p className="text-[0.875rem] text-[var(--body)]">{validacao}</p>
+              <img
+                className="w-[1rem] h-[1rem]"
+                src={regra.valido ? RightActive : CancelRed}
+                alt={regra.valido ? "ok" : "erro"}
+              />
+              <p
+                className={`text-[0.875rem] ${
+                  regra.valido ? "text-[var(--brand)]" : "text-[var(--body)]"
+                }`}>
+                {regra.texto}
+              </p>
             </div>
           ))}
         </section>
-
         {/* Botão criar conta */}
         <div className="mt-6 w-full flex justify-end">
           <Button label="Criar conta" variant={ButtonVariant.Primary} />
