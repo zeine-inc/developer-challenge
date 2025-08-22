@@ -6,11 +6,13 @@ import Upload from "../../public/icons/upload.png";
 interface ImageUploaderProps {
   imagemContato: string;
   onChange?: (novaImagem: string) => void;
+  onFileChange?: (file: File) => void;
 }
 
 export default function ImageUploader({
   imagemContato,
   onChange,
+  onFileChange,
 }: ImageUploaderProps) {
   const [image, setImage] = useState<string>(Perfil);
 
@@ -32,6 +34,8 @@ export default function ImageUploader({
         onChange?.(result);
       };
       reader.readAsDataURL(file);
+
+      onFileChange?.(file);
     }
   };
 

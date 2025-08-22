@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import type { Contato } from "../interfaces/interfaces";
 import ImageUploader from "./imagem_uploader";
+import { adicionarContato } from "../service/service";
 
 import Fechar from "../../public/icons/cancel.png";
 import Perfil from "../../public/images/perfil.png";
@@ -15,16 +16,20 @@ interface ModalProps {
 }
 
 export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
+  const id_vendedor = sessionStorage.getItem("id");
   const [nome, setNome] = useState<string>("");
   const [telefone, setTelefone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [imagem, setImagem] = useState<string>("");
+  const [relacao, setRelacao] = useState<string>("");
+  const [foto, setFoto] = useState<string>("");
+  const [fotoFile, setFotoFile] = useState<File>();
 
   const zerarCampos = () => {
     setNome("");
     setTelefone("");
     setEmail("");
-    setImagem(Perfil);
+    setRelacao("");
+    setFoto(Perfil);
   };
 
   useEffect(() => {
@@ -32,11 +37,24 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
       setNome(contato.nome);
       setTelefone(contato.telefone);
       setEmail(contato.email);
-      setImagem(contato.foto);
+      setRelacao(contato.relacao);
+      setFoto(contato.foto as string);
     } else {
       zerarCampos();
     }
   }, [tipo, contato]);
+
+  const salvarContato = async () => {
+    const novoContato: Contato = {
+      nome: nome,
+      telefone: telefone,
+      email: email,
+      relacao: relacao,
+      foto: fotoFile as File,
+    };
+    const responseStatus = await adicionarContato(novoContato, id_vendedor!);
+    console.log(responseStatus);
+  };
 
   return (
     <section
@@ -63,7 +81,11 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
         <hr className="h-px w-[90%] my-3 bg-white" />
 
         <div className="flex flex-col justify-center items-center gap-5">
-          <ImageUploader imagemContato={imagem} />
+          <ImageUploader
+            imagemContato={foto}
+            onChange={setFoto}
+            onFileChange={setFotoFile}
+          />
         </div>
 
         {/* Input senha */}
@@ -89,6 +111,13 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
             placeholder="Email do contato"
             type="text"
           />
+          <TextField
+            input={relacao}
+            onChange={setRelacao}
+            label="Relacionamento"
+            placeholder="Relacionamento com o contato"
+            type="text"
+          />
         </div>
 
         <hr className="h-px w-[90%] my-3  bg-[var(--muted)]" />
@@ -103,7 +132,11 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
               onClose();
             }}
           />
-          <Button label="Salvar" variant={ButtonVariant.Primary} />
+          <Button
+            label="Salvar"
+            variant={ButtonVariant.Primary}
+            onClick={salvarContato}
+          />
         </div>
       </div>
     </section>

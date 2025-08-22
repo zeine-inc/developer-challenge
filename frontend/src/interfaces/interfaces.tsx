@@ -11,6 +11,6 @@ export interface Contato {
   nome: string;
   email: string;
   telefone: string;
-  foto: string;
+  foto: string | File;
   relacao: string;
 }
