@@ -28,7 +28,7 @@ export function PageLogin() {
             type="password"
           />
 
-          <div className="w-full align-end">
+          <div className="w-full flex justify-end">
             <Button label="Acessar conta" variant={ButtonVariant.Primary} />
           </div>
         </div>
