@@ -43,6 +43,7 @@ export async function login({ ...props }: InterfaceLogin) {
     const data = await response.json();
 
     if (response.ok) {
+      await pegarContatos(data.id);
       localStorage.setItem("email", props.email);
       localStorage.setItem("id", data.id);
       localStorage.setItem("nome", data.nome);
@@ -53,5 +54,23 @@ export async function login({ ...props }: InterfaceLogin) {
     }
   } catch (e) {
     console.error(`Erro ao fazer login: ${e}`);
+  }
+}
+
+export async function pegarContatos(id_vendedor: number) {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/vendedor/${id_vendedor}/contatos`
+    );
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem("contatos", JSON.stringify(data.contatos));
+    } else {
+      localStorage.setItem("contatos", "[]");
+    }
+  } catch (e) {
+    console.error(`Erro ao solicitar os contatos: ${e}`);
+    localStorage.setItem("contatos", "[]");
   }
 }
