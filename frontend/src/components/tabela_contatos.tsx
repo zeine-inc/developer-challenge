@@ -1,25 +1,31 @@
 import Button, { ButtonVariant } from "../components/button";
 import IconButton from "../components/iconbutton";
 
+import type { Contato } from "../interfaces/interfaces";
+
 import CadeadoAberto from "../../public/icons/lock_open.png";
 import Lixeira from "../../public/icons/remove.png";
 import Carmem from "../../public/images/Illustra-1.png";
 import Cristina from "../../public/images/Illustra.png";
 
-export default function TabelaContatos() {
-  const contatos = [
+interface TabelaContatosProps {
+  onEditar: (contato: Contato) => void;
+}
+
+export default function TabelaContatos({ onEditar }: TabelaContatosProps) {
+  const contatos: Contato[] = [
     {
       imagem: Carmem,
       nome: "Carmem Lúcia",
       relacao: "Trabalho",
-      contato: "(16) 3537-7333",
+      telefone: "(16) 3537-7333",
       email: "carmem.lucia@example.com",
     },
     {
       imagem: Cristina,
       nome: "Cristina Silveira",
       relacao: "Colega",
-      contato: "(19) 2337-5664",
+      telefone: "(19) 2337-5664",
       email: "cristinasilveira98@example.com",
     },
   ];
@@ -64,18 +70,22 @@ export default function TabelaContatos() {
 
               {/* Telefone */}
               <td className="text-[var(--body)] text-[0.875rem] py-4">
-                {contato.contato}
+                {contato.telefone.split("").map((letra) => (letra = "*"))}
               </td>
 
               {/* Email */}
               <td className="text-[var(--body)] text-[0.875rem] py-4">
-                {contato.email}
+                {contato.email.split("").map((letra) => (letra = "*"))}
               </td>
 
               {/* Ações */}
               <td className="py-4">
                 <div className="flex gap-2">
-                  <Button label="Editar" variant={ButtonVariant.Secondary} />
+                  <Button
+                    label="Editar"
+                    variant={ButtonVariant.Secondary}
+                    onClick={() => onEditar(contato)}
+                  />
                   <IconButton
                     imagem={CadeadoAberto}
                     ativo={false}
