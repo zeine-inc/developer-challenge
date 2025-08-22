@@ -1,122 +1,49 @@
-# Desafio Técnico | Marketplace - Painel do Vendedor 🤑
+# Marketplace – Painel do Vendedor
 
-![Capa](./images/cover.jpg)
+## Links rápidos
 
-## 🎯 Objetivo
+- Front (deploy): https://...
+- Back (deploy): https://...
+- PR (ou fork): https://...
+- Vídeo demo (Loom/YouTube): https://...
 
-Desenvolver 3 telas de um sistema web para **gestão de produtos em um marketplace**, baseado no design fornecido via Figma.
+## Como rodar localmente
 
-O sistema simula o **painel de controle de um vendedor**, onde é possível cadastrar, visualizar e gerenciar seus produtos.
+- Requisitos: Node v18+, Docker (opcional), PNPM/NPM, PostgreSQL/MongoDB
+- Backend:
+  1. cp .env.example .env # configure DB/JWT/Storage
+  2. pnpm install
+  3. pnpm db:migrate && pnpm db:seed
+  4. pnpm dev
+- Frontend:
+  1. cp .env.local.example .env.local # API_URL
+  2. pnpm install
+  3. pnpm dev
 
-- **Protótipo Figma**:
-  [https://www.figma.com/community/file/1405890943950015706](https://www.figma.com/community/file/1405890943950015706)
+## Decisões técnicas
 
-- **Prazo de entrega**:
-  4 dias a partir do recebimento.
+- Stack: Next.js + NestJS (ou FastAPI) + PostgreSQL/MongoDB
+- Autenticação: JWT + refresh (httpOnly) / proteção de rotas
+- Upload: storage local em dev, provider em prod (ex.: S3/Cloudinary)
+- Filtros e estados: ativo/inativo/vendido etc. com index e paginação
 
----
+## Requisitos cobertos
 
-## 📌 Requisitos
+- Login com validação
+- Listagem com filtros por texto e status
+- Produto: imagem, título, descrição, valor, categoria; Salvar/Publicar/Cancelar
+- Backend com usuários, produtos, categorias/status; ERD incluso
+- Mensagem secreta: tooltip após 7s no hover em “Novo produto”
 
-### Funcionalidades obrigatórias
+## Testes
 
-As seguintes telas e recursos devem ser implementados:
+- API: auth, criação/listagem de produtos, filtros
+- UI: componentes de formulário e filtro
 
-1. **Tela de Login**
+## ERD
 
-   - Autenticação com e-mail e senha.
-   - Validação de campos.
+![ERD](./docs/erd.png)
 
-2. **Tela de Listagem de Produtos**
+## Observações
 
-   - Exibe todos os produtos cadastrados.
-   - Permite filtrar por texto e status (ativo, inativo, vendido, etc).
-   - Produtos exibidos com imagem, preço, descrição e status.
-
-3. **Tela de Cadastro de Produto**
-
-   - Upload de imagem do produto.
-   - Título, descrição, valor e categoria.
-   - Botões para **Salvar e Publicar** ou **Cancelar**.
-
-4. **Backend Funcional**
-
-   - Deve suportar o armazenamento de usuários, autenticação, produtos e suas categorias/status.
-
-5. **Banco de dados**
-
-   - PostgreSQL ou MongoDB (ou outro de sua escolha, se bem justificado).
-
-6. **Mensagem secreta**
-
-   - Ao manter o mouse sobre o botão “Novo produto” por 7 segundos, surge um tooltip especial:
-     `“Tá esperando o quê? Boraa moeer!! 🚀”`
-
----
-
-### Diferenciais (opcionais, mas recomendados)
-
-1. **Deploy**
-
-   - Publique o front-end (ex: Vercel) e o back-end (ex: Render) se possível.
-   - Inclua os links no README.
-
-2. **Documentação**
-
-   - Explique a estrutura do projeto, como executar, e decisões técnicas.
-
-3. **Testes automatizados**
-
-   - Testes simples de integração (API) e/ou de componentes (UI).
-
-4. **Diagrama ERD**
-
-   - Um pequeno diagrama mostrando entidades e relações (usuários, produtos, categorias).
-
----
-
-## 🛠️ Stacks recomendadas
-
-Você pode usar qualquer tecnologia, mas sugerimos:
-
-- **Frontend**: Next.js ou React (web)
-- **Backend**: FastAPI ou NestJS
-- **Banco de dados**: PostgreSQL ou MongoDB
-
----
-
-## 📦 Entregáveis
-
-1. **Repositório com o código-fonte**
-
-   - GitHub, GitLab ou Bitbucket.
-
-2. **Instruções de execução**
-
-   - Como rodar o frontend e backend localmente.
-   - Se possível, um script ou Docker.
-
-3. **Demonstração visual**
-
-   - Imagens ou vídeo da aplicação em funcionamento.
-
-4. **(Opcional) Link do Deploy**
-
-   - Front e/ou back publicado.
-
----
-
-## 🔍 O que será avaliado
-
-- Organização e clareza do código
-- Estrutura do projeto
-- Boas práticas de autenticação e manipulação de dados
-- UX simples e funcional
-- Atenção aos detalhes (como a mensagem secreta 👀)
-
----
-
-## 📩 Dúvidas?
-
-Se tiver qualquer dúvida durante o desafio, envie uma mensagem. Estamos aqui para ajudar. Boa sorte e...
-**Boraa moeer!! 🔥🚀**
+- Limitações conhecidas e próximos passos
