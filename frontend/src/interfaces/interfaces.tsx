@@ -8,6 +8,7 @@ export interface InterfaceCadastro extends InterfaceLogin {
 }
 
 export interface Contato {
+  id: number;
   nome: string;
   email: string;
   telefone: string;
