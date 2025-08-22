@@ -23,6 +23,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
   const [relacao, setRelacao] = useState<string>("");
   const [foto, setFoto] = useState<string>("");
   const [fotoFile, setFotoFile] = useState<File>();
+  const [labelButton, setLabelButton] = useState<string>("Salvar");
 
   const zerarCampos = () => {
     setNome("");
@@ -46,14 +47,30 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
 
   const salvarContato = async () => {
     const novoContato: Contato = {
-      nome: nome,
-      telefone: telefone,
-      email: email,
-      relacao: relacao,
+      nome,
+      telefone,
+      email,
+      relacao,
       foto: fotoFile as File,
     };
-    const responseStatus = await adicionarContato(novoContato, id_vendedor!);
-    console.log(responseStatus);
+
+    setLabelButton("Salvando...");
+    try {
+      const responseStatus = await adicionarContato(novoContato, id_vendedor!);
+
+      if (responseStatus === 200) {
+        setLabelButton("Contato Salvo");
+
+        setTimeout(() => setLabelButton("Salvar"), 2000);
+      } else {
+        setLabelButton("Erro ao salvar");
+        setTimeout(() => setLabelButton("Salvar"), 2000);
+      }
+    } catch (e) {
+      console.error(e);
+      setLabelButton("Erro ao salvar");
+      setTimeout(() => setLabelButton("Salvar"), 2000);
+    }
   };
 
   return (
@@ -133,7 +150,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
             }}
           />
           <Button
-            label="Salvar"
+            label={labelButton}
             variant={ButtonVariant.Primary}
             onClick={salvarContato}
           />
