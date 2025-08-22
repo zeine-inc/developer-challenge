@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import PageApresentacao from "../components/pagina_apresentacao";
 import LinkSingLog from "../components/link_singlog";
@@ -21,6 +22,8 @@ export function PageCadastro() {
   const [cadastroBool, setCadastro] = useState<boolean>(false);
   const [mensagemVisivel, setVisibilidade] = useState<boolean>(false);
   const [mensagem, setMensagem] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const regras = [
     {
@@ -45,8 +48,11 @@ export function PageCadastro() {
     });
 
     if (responseStatus === 200) {
-      setMensagem("Cadastro realizado");
+      setMensagem("Cadastro realizado. Redirecionando para login!");
       setCadastro(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
     } else if (responseStatus === 400) {
       setMensagem("E-mail já cadastrado");
       setEmail("");
@@ -58,6 +64,9 @@ export function PageCadastro() {
     }
 
     setVisibilidade(true);
+    setTimeout(() => {
+      setVisibilidade(false), setMensagem("");
+    }, 1500);
   };
 
   return (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import PageApresentacao from "../components/pagina_apresentacao";
 import LinkSingLog from "../components/link_singlog";
@@ -9,6 +10,8 @@ import { emailValido } from "../utils/validar";
 import { login } from "../service/service";
 
 export function PageLogin() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>("");
   const [senha, setSenha] = useState<string>("");
 
@@ -20,8 +23,11 @@ export function PageLogin() {
     const responseStatus = await login({ email, senha });
 
     if (responseStatus === 200) {
-      setMensagem("Login efetuado com sucesso!");
+      setMensagem("Login efetuado com sucesso. Redirecionando para o ínicio!");
       setSucesso(true);
+      setTimeout(() => {
+        navigate("/inicio");
+      }, 1500);
     } else if (responseStatus === 401) {
       setMensagem("Credenciais incorretas");
       setSucesso(false);
