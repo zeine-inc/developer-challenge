@@ -32,7 +32,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
       setNome(contato.nome);
       setTelefone(contato.telefone);
       setEmail(contato.email);
-      setImagem(contato.imagem);
+      setImagem(contato.foto);
     } else {
       zerarCampos();
     }

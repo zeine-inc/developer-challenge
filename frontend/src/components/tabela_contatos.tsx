@@ -5,30 +5,25 @@ import type { Contato } from "../interfaces/interfaces";
 
 import CadeadoAberto from "../../public/icons/lock_open.png";
 import Lixeira from "../../public/icons/remove.png";
-import Carmem from "../../public/images/Illustra-1.png";
-import Cristina from "../../public/images/Illustra.png";
 
 interface TabelaContatosProps {
   onEditar: (contato: Contato) => void;
 }
 
 export default function TabelaContatos({ onEditar }: TabelaContatosProps) {
-  const contatos: Contato[] = [
-    {
-      imagem: Carmem,
-      nome: "Carmem Lúcia",
-      relacao: "Trabalho",
-      telefone: "(16) 3537-7333",
-      email: "carmem.lucia@example.com",
-    },
-    {
-      imagem: Cristina,
-      nome: "Cristina Silveira",
-      relacao: "Colega",
-      telefone: "(19) 2337-5664",
-      email: "cristinasilveira98@example.com",
-    },
-  ];
+  const contatosSession = sessionStorage.getItem("contatos");
+  const contatos: Contato[] = contatosSession
+    ? JSON.parse(contatosSession)
+    : [];
+
+  if (contatos.length === 0) {
+    return (
+      <div className="text-center text-[var(--muted)] text-[1rem] py-10">
+        Cadastre seu primeiro contato 🙂
+      </div>
+    );
+  }
+
   return (
     <table className="w-full ml-8 border-separate border-spacing-0">
       <thead>
@@ -49,12 +44,12 @@ export default function TabelaContatos({ onEditar }: TabelaContatosProps) {
       <tbody>
         {contatos.map((contato, idx) => (
           <>
-            <tr key={contato.email} className="align-middle">
+            <tr key={idx} className="align-middle">
               {/* Nome + Imagem */}
               <td className="py-8">
                 <div className="flex items-center gap-3">
                   <img
-                    src={contato.imagem}
+                    src={contato.foto}
                     className="w-[3rem] h-[3rem] rounded-xl"
                   />
                   <div>
@@ -70,12 +65,12 @@ export default function TabelaContatos({ onEditar }: TabelaContatosProps) {
 
               {/* Telefone */}
               <td className="text-[var(--body)] text-[0.875rem] py-4">
-                {contato.telefone.split("").map((letra) => (letra = "*"))}
+                {contato.telefone.replace(/\d/g, "*")}
               </td>
 
               {/* Email */}
               <td className="text-[var(--body)] text-[0.875rem] py-4">
-                {contato.email.split("").map((letra) => (letra = "*"))}
+                {contato.email.replace(/./g, "*")}
               </td>
 
               {/* Ações */}
