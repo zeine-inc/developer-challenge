@@ -1,14 +1,14 @@
 import { useState } from "react";
-
 import Fechar from "../../public/icons/cancel.png";
 import TextField from "./text_field";
 import Button, { ButtonVariant } from "./button";
 
 interface ModalProps {
   onClose: () => void;
+  onConfirm: (senhaDigitada: string) => void;
 }
 
-export default function ModalInformacoes({ onClose }: ModalProps) {
+export default function ModalInformacoes({ onClose, onConfirm }: ModalProps) {
   const [senha, setSenha] = useState<string>("");
 
   return (
@@ -16,7 +16,6 @@ export default function ModalInformacoes({ onClose }: ModalProps) {
       aria-label="Janela flutuante"
       className="absolute inset-0 flex justify-center items-center backdrop-blur-md">
       <div className="bg-[var(--background-primary)] p-6 rounded-2xl w-[21rem] h-[19rem] relative">
-        {/* Header */}
         <div className="flex justify-between items-center">
           <h2 className="text-white text-lg font-bold">
             Visualizar Informações
@@ -30,7 +29,6 @@ export default function ModalInformacoes({ onClose }: ModalProps) {
 
         <hr className="h-px w-[90%] my-3 bg-white" />
 
-        {/* Input senha */}
         <div className="p-[1rem]">
           <TextField
             input={senha}
@@ -41,16 +39,19 @@ export default function ModalInformacoes({ onClose }: ModalProps) {
           />
         </div>
 
-        <hr className="h-px w-[90%] my-3  bg-[var(--muted)]" />
+        <hr className="h-px w-[90%] my-3 bg-[var(--muted)]" />
 
-        {/* Ações */}
         <div className="flex gap-2 justify-end mt-[2rem]">
           <Button
             label="Voltar"
             variant={ButtonVariant.Secondary}
             onClick={onClose}
           />
-          <Button label="Confirmar" variant={ButtonVariant.Primary} />
+          <Button
+            label="Confirmar"
+            variant={ButtonVariant.Primary}
+            onClick={() => onConfirm(senha)}
+          />
         </div>
       </div>
     </section>

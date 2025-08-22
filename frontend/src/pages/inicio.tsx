@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 import Lupa from "../../public/icons/search.png";
-import Cadeado from "../../public/icons/lock.png";
+import CadeadoFechado from "../../public/icons/lock.png";
+import CadeadoAberto from "../../public/icons/lock_open.png";
 
 import type { Contato } from "../interfaces/interfaces";
 
@@ -11,14 +12,12 @@ import Button, { ButtonVariant } from "../components/button";
 import IconButton from "../components/iconbutton";
 import FiltroAlfabeto from "../components/filtrar";
 import TabelaContatos from "../components/tabela_contatos";
-import ModalInformacoes from "../components/modalInformacoes";
 import ModalContato from "../components/modalContato";
+import ModalInformacoes from "../components/modalInformacoes";
 
 export default function PageInicio() {
   const [busca, setBusca] = useState<string>("");
   const [letraFiltar, setLetraFiltrar] = useState<string>("");
-  const [mostrarModalInformacoes, setMostrarModalInformacoes] =
-    useState<boolean>(false);
   const [mostrarModalContato, setMostrarModalContato] =
     useState<boolean>(false);
   const [contatoSelecionado, setContatoSelecionado] = useState<
@@ -26,20 +25,19 @@ export default function PageInicio() {
   >();
   const [tipoModal, setTipoModal] = useState<string>("add");
 
+  const [desbloquearTodos, setDesbloquearTodos] = useState<boolean>(false);
+  const [modalSenhaGlobal, setModalSenhaGlobal] = useState<boolean>(false);
+
   return (
     <section aria-label="Página de contatos" className="flex">
       <SideBar />
       <div className="mt-[8rem] bg-[var(--background-secondary)] w-[80%] h-[80vh] rounded-[3rem]">
-        <div
-          aria-label="Seção do cabeçalho da página"
-          className="flex items-center justify-between gap-4 p-4 rounded-lg mt-[2rem]">
-          {/* Título */}
+        <div className="flex items-center justify-between gap-4 p-4 rounded-lg mt-[2rem]">
           <h2 className="ml-[5rem] text-[2rem] font-bold text-white">
             Lista de contatos
           </h2>
 
           <div className="flex gap-[1rem] p-[1rem]">
-            {/* Campo de busca */}
             <div className="flex-1 w-[25rem]">
               <TextField
                 label=""
@@ -51,7 +49,6 @@ export default function PageInicio() {
               />
             </div>
 
-            {/* Botão adicionar */}
             <Button
               label="+ Adicionar contato"
               variant={ButtonVariant.Secondary}
@@ -61,13 +58,21 @@ export default function PageInicio() {
               }}
             />
 
+            {/* Cadeado global que abre modal de senha */}
             <IconButton
-              imagem={Cadeado}
+              imagem={desbloquearTodos ? CadeadoAberto : CadeadoFechado}
               ativo={false}
-              onClick={() => setMostrarModalInformacoes(true)}
+              onClick={() => {
+                if (desbloquearTodos === true) {
+                  setDesbloquearTodos(false);
+                } else {
+                  setModalSenhaGlobal(true);
+                }
+              }}
             />
           </div>
         </div>
+
         <div className="flex px-[4rem] w-full">
           <FiltroAlfabeto
             letras={"ABCDEFGHIJKLMNO".split("")}
@@ -75,7 +80,6 @@ export default function PageInicio() {
           />
 
           <div aria-label="Sessão de Contatos" className="flex flex-col w-full">
-            {/* Cabeçalho do filtro */}
             <div aria-label="Resultado do filtro" className="p-[2rem]">
               <p className="font-bold text-[0.875rem] text-[var(--primary)]">
                 {letraFiltar}
@@ -91,14 +95,26 @@ export default function PageInicio() {
                   setMostrarModalContato(true);
                 }
               }}
+              desbloquearTodos={desbloquearTodos}
             />
           </div>
         </div>
       </div>
 
-      {mostrarModalInformacoes && (
-        <ModalInformacoes onClose={() => setMostrarModalInformacoes(false)} />
+      {/* Modal global de senha */}
+      {modalSenhaGlobal && (
+        <ModalInformacoes
+          onClose={() => setModalSenhaGlobal(false)}
+          onConfirm={(senhaDigitada: string) => {
+            const senhaSalva = sessionStorage.getItem("senha");
+            if (senhaDigitada === senhaSalva) {
+              setDesbloquearTodos(true);
+              setModalSenhaGlobal(false);
+            }
+          }}
+        />
       )}
+
       {mostrarModalContato && (
         <ModalContato
           tipo={tipoModal}
