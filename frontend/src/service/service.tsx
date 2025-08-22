@@ -1,4 +1,7 @@
-import type { InterfaceCadastro } from "../interfaces/interfaces";
+import type {
+  InterfaceCadastro,
+  InterfaceLogin,
+} from "../interfaces/interfaces";
 
 export async function cadastrar({ ...props }: InterfaceCadastro) {
   try {
@@ -16,7 +19,7 @@ export async function cadastrar({ ...props }: InterfaceCadastro) {
 
     const data = await response.json();
 
-    if (response.ok) return 200;
+    if (response.ok) return response.status;
     else {
       console.error(data);
       return response.status;
@@ -24,5 +27,31 @@ export async function cadastrar({ ...props }: InterfaceCadastro) {
   } catch (e) {
     console.error(`Erro ao cadastrar: ${e} `);
     return 500;
+  }
+}
+
+export async function login({ ...props }: InterfaceLogin) {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/login", {
+      headers: {
+        "Content-type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({ email: props.email, senha: props.senha }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem("email", props.email);
+      localStorage.setItem("id", data.id);
+      localStorage.setItem("nome", data.nome);
+      return response.status;
+    } else {
+      console.error(data);
+      return response.status;
+    }
+  } catch (e) {
+    console.error(`Erro ao fazer login: ${e}`);
   }
 }
