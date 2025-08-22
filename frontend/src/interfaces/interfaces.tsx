@@ -6,3 +6,11 @@ export interface InterfaceLogin {
 export interface InterfaceCadastro extends InterfaceLogin {
   nome: string;
 }
+
+export interface Contato {
+  nome: string;
+  email: string;
+  telefone: string;
+  imagem: string;
+  relacao: string;
+}
