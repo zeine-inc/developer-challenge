@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Path
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 from database.database import engine, Vendedor, Contato
@@ -17,6 +18,13 @@ cloudinary.config(
 )
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Sessão do SQLAlchemy
 SessionLocal = sessionmaker(bind=engine, autoflush=False)
