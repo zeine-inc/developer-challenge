@@ -1,4 +1,4 @@
-from fastapi import HTTPException, UploadFile, File, Form, Path
+from fastapi import HTTPException, UploadFile, File, Form, Path, Body
 from sqlalchemy.exc import IntegrityError
 import cloudinary
 import cloudinary.uploader
@@ -187,8 +187,10 @@ def listar_contatos_vendedor(vendedor_id: int = Path(...)):
         db.close()
 
 @app.put("/exlcuirContato")
-def excluir_contato(vendedor_id: int, contato_id: int):
-    db = SessionLocal();
+def excluir_contato(data: dict = Body(...)):
+    vendedor_id = data.get("vendedor_id");
+    contato_id = data.get("contato_id");
+    db = SessionLocal(); 
 
     try:
         deletar = db.query(VendedorContato).filter(
