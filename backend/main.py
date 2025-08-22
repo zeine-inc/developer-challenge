@@ -67,7 +67,7 @@ def login_vendedor(vendedor: VendedorLogin):
         if not verificar_senha(vendedor.senha, vendedor_login.senha):
             raise HTTPException(status_code=401, detail="Senha incorreta")
         
-        return {"status": 200, "id": vendedor_login.id}
+        return {"status": 200, "id": vendedor_login.id, "nome": vendedor_login.nome, "email": vendedor_login.email}
     finally:
         db.close()
 
