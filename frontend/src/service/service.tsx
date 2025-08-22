@@ -95,7 +95,10 @@ export async function adicionarContato(contato: Contato, vendedor_id: string) {
       body: formData,
     });
 
+    const data = await response.json();
+
     if (response.ok) {
+      adicionarContatoNaSession(data);
       return response.status;
     }
 
@@ -103,5 +106,21 @@ export async function adicionarContato(contato: Contato, vendedor_id: string) {
   } catch (e) {
     console.error(`Erro ao adicionar contato: ${e}`);
     return 500;
+  }
+}
+
+function adicionarContatoNaSession(data: any) {
+  try {
+    // Recupera os contatos atuais da session
+    const contatosStr = sessionStorage.getItem("contatos");
+    const contatos: Contato[] = contatosStr ? JSON.parse(contatosStr) : [];
+
+    const novoContato = { ...data };
+
+    contatos.push(novoContato);
+
+    sessionStorage.setItem("contatos", JSON.stringify(contatos));
+  } catch (e) {
+    console.error(`Erro ao atualizar contatos na session: ${e}`);
   }
 }
