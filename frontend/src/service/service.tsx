@@ -1,4 +1,5 @@
 import type {
+  Contato,
   InterfaceCadastro,
   InterfaceLogin,
 } from "../interfaces/interfaces";
@@ -73,5 +74,34 @@ export async function pegarContatos(id_vendedor: number) {
   } catch (e) {
     console.error(`Erro ao solicitar os contatos: ${e}`);
     sessionStorage.setItem("contatos", "[]");
+  }
+}
+
+export async function adicionarContato(contato: Contato, vendedor_id: string) {
+  try {
+    const formData = new FormData();
+    formData.append("vendedor_id", vendedor_id);
+    formData.append("nome", contato.nome);
+    formData.append("email", contato.email);
+    formData.append("telefone", contato.telefone);
+    formData.append("relacao", contato.relacao);
+
+    if (contato.foto) {
+      formData.append("foto", contato.foto);
+    }
+
+    const response = await fetch("http://127.0.0.1:8000/cadastrarContato", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      return response.status;
+    }
+
+    return response.status;
+  } catch (e) {
+    console.error(`Erro ao adicionar contato: ${e}`);
+    return 500;
   }
 }
