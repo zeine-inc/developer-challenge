@@ -185,3 +185,26 @@ def listar_contatos_vendedor(vendedor_id: int = Path(...)):
         return {"status": 200, "contatos": contatos}
     finally:
         db.close()
+
+@app.put("/exlcuirContato")
+def excluir_contato(vendedor_id: int, contato_id: int):
+    db = SessionLocal();
+
+    try:
+        deletar = db.query(VendedorContato).filter(
+            VendedorContato.id_vendedor == vendedor_id,
+            VendedorContato.id_contato == contato_id
+        ).delete()
+
+        if deletar == 0:
+            raise HTTPException(status_code=404, detail="Associação não encontrada")
+
+        db.commit()
+        return {"status": 200, "mensagem": "Contato desvinculado com sucesso"}
+    
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=400, detail="Erro de integridade no banco de dados")
+    
+    finally:
+        db.close()
