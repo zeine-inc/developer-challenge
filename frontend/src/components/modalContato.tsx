@@ -8,6 +8,7 @@ import Fechar from "../../public/icons/cancel.png";
 import Perfil from "../../public/images/perfil.png";
 import TextField from "./text_field";
 import Button, { ButtonVariant } from "./button";
+import { emailValido, validarTelefone } from "../utils/validar";
 
 interface ModalProps {
   onClose: () => void;
@@ -137,6 +138,8 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
             label="Telefone"
             placeholder="Número de Telefone"
             type="text"
+            helper="Somente número: XXXXXXXXXXX"
+            error={!validarTelefone(telefone)}
           />
           <TextField
             input={email}
@@ -144,6 +147,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
             label="E-mail"
             placeholder="Email do contato"
             type="text"
+            error={!emailValido(email)}
           />
           <TextField
             input={relacao}
