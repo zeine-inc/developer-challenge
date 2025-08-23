@@ -9,16 +9,18 @@ export enum ButtonVariant {
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   variant?: ButtonVariant;
+  icon?: string;
 }
 
 export default function Button({
   label,
   variant = ButtonVariant.Primary,
+  icon,
   onClick,
   ...props
 }: ButtonProps) {
   const baseClasses =
-    "cursor-pointer px-4 py-2 rounded-2xl font-medium transition-colors duration-200 z-10";
+    "cursor-pointer px-4 py-2 rounded-2xl font-medium transition-colors duration-200 z-10 flex items-center justify-center gap-2";
 
   let variantClasses = "";
 
@@ -42,6 +44,9 @@ export default function Button({
       onClick={onClick}
       className={`${baseClasses} ${variantClasses}`}
       {...props}>
+      {icon ? (
+        <img src={icon} className="w-[1rem] h-[1rem] flex-shrink-0" />
+      ) : null}
       {label}
     </button>
   );

@@ -12,6 +12,7 @@ import { excluirContato } from "../service/service";
 import CadeadoFechado from "../../public/icons/lock.png";
 import CadeadoAberto from "../../public/icons/lock_open.png";
 import Lixeira from "../../public/icons/remove.png";
+import Lapis from "../../public/icons/edit.png";
 
 interface TabelaContatosProps {
   desbloquearTodos: boolean;
@@ -162,8 +163,9 @@ export default function TabelaContatos({
                 <td className="py-4">
                   <div className="flex gap-2">
                     <Button
+                      icon={Lapis}
                       label="Editar"
-                      variant={ButtonVariant.Secondary}
+                      variant={ButtonVariant.Tertiary}
                       onClick={() => {
                         setTipoModal("edit");
                         setContatoSelecionado(contato);
