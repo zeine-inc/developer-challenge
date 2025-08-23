@@ -214,6 +214,28 @@ erDiagram
 
 **Pós-condições:** Vendedor visualiza as informações do contato com segurança
 
+---
+
+### 7. Mudar nome ou senha
+
+**Ator:** Vendedor  
+**Objetivo:** Alterar dados (nome ou senha) <br>
+**Pré-condições:** Vendedor autenticado
+
+**Fluxo Principal:**
+
+1. Vendedor preenche os campos que deseja modificar.
+2. O sistema valida os campos.
+3. O sistema modidica os campos alterados.
+
+**Fluxos Alternativos:**
+
+- **Campos inconsistentes**  
+  2a. Sistema não valida as informações.  
+  2b. Sistema retorna uma mensagem de erro informando dos sobre os campos inválidos.
+
+**Pós-condições:** Vendedor com dados (nome ou senha) alterados.
+
 ## Tecnologias utilizadas
 
 ### React + Vite
