@@ -76,13 +76,17 @@ export default function TabelaContatos({
       const contatosSession = sessionStorage.getItem("contatos");
       if (contatosSession) {
         const contatos: Contato[] = JSON.parse(contatosSession);
-        const novosContatos = contatos.filter((c) => c.id !== contatoId);
+        const novosContatos = contatos.filter(
+          (c) => c.contato_id !== contatoId
+        );
         sessionStorage.setItem("contatos", JSON.stringify(novosContatos));
       }
 
       // Re-render
       setDesbloqueados((prev) =>
-        prev.filter((_, idx) => contatosFiltrados[idx]?.id !== contatoId)
+        prev.filter(
+          (_, idx) => contatosFiltrados[idx]?.contato_id !== contatoId
+        )
       );
     } else {
       console.error("Erro ao excluir contato");
@@ -174,7 +178,7 @@ export default function TabelaContatos({
                     <IconButton
                       imagem={Lixeira}
                       ativo={false}
-                      onClick={() => removerContato(contato.id!)}
+                      onClick={() => removerContato(contato.contato_id!)}
                     />
                   </div>
                 </td>
