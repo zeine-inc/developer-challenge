@@ -68,8 +68,8 @@ async def cadastrar_contatos(
             "contato_id": contato.id,
             "vendedor_id": vendedor.id,
             "nome": contato.nome,
-            "email": contato.email,
-            "telefone": contato.telefone,
+            "email": descriptografar_email(contato.email),
+            "telefone": descriptografar_telefone(contato.telefone),
             "foto": contato.foto,
             "relacao": assoc.relacao if assoc else None,
         }
@@ -142,8 +142,8 @@ async def editar_contato(
             "contato_id": contato.id,
             "vendedor_id": vendedor.id,
             "nome": contato.nome,
-            "email": contato.email,
-            "telefone": contato.telefone,
+            "email": descriptografar_email(contato.email),
+            "telefone": descriptografar_telefone(contato.telefone),
             "foto": contato.foto,
             "relacao": assoc.relacao if assoc else None
         }
