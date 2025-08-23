@@ -14,6 +14,7 @@ import FiltroAlfabeto from "../components/filtrar";
 import TabelaContatos from "../components/tabela_contatos";
 import ModalInformacoes from "../components/modalInformacoes";
 import ModalContato from "../components/modalContato";
+import AdicionarContatoButton from "../components/adicionarContato";
 
 export default function PageInicio() {
   const [busca, setBusca] = useState<string>("");
@@ -66,10 +67,8 @@ export default function PageInicio() {
               />
             </div>
 
-            <Button
-              label="+ Adicionar contato"
-              variant={ButtonVariant.Secondary}
-              onClick={() => setModalAdicionarContato(true)}
+            <AdicionarContatoButton
+              setModalAdicionarContato={setModalAdicionarContato}
             />
 
             {/* Cadeado global que abre modal de senha */}
