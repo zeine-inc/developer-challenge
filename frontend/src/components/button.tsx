@@ -31,7 +31,7 @@ export default function Button({
 
   if (variant === ButtonVariant.Secondary) {
     variantClasses =
-      "bg-[var(--background-tertiary)] text-[var(--primary)] hover:bg-[var(--background-secondary)]";
+      "h-[3rem] bg-[var(--background-tertiary)] text-[var(--primary)] hover:bg-[var(--background-secondary)]";
   }
 
   if (variant === ButtonVariant.Tertiary) {
