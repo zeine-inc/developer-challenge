@@ -22,7 +22,10 @@ export default function FiltroAlfabeto({
   };
 
   return (
-    <div className="flex lg:flex-col bg-[var(--brand)] lg:h-[9  0%] rounded-[1.5rem] mt-[1rem] px-2 py-4 gap-2 items-center select-none md:justify-around md:w-[full] lg:w-[4rem]">
+    <div
+      className="flex lg:flex-col bg-[var(--brand)] rounded-[1.5rem] mt-[1rem] px-2 py-4 gap-2 items-center select-none
+               md:justify-around md:w-full lg:w-[4rem] 
+               max-h-[60vh] overflow-y-auto scrollbar-none">
       {letras.map((letra) => {
         const isSelecionada = letra === selecionada;
         return (

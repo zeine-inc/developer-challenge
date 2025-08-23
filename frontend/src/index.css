@@ -20,3 +20,13 @@ body {
   --brand: #c4f120;
   --red: #e61e32;
 }
+
+/* CSS global */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

@@ -58,10 +58,7 @@ export default function PageContato() {
 
       {/* Filtro e Tabela */}
       <div className="flex flex-col lg:flex-row px-4 lg:px-16 w-full">
-        <FiltroAlfabeto
-          letras={"ABCDEFGHIJKLMNO".split("")}
-          onSelecionar={setLetraFiltrar}
-        />
+        <FiltroAlfabeto onSelecionar={setLetraFiltrar} />
 
         <div
           aria-label="Sessão de Contatos"
