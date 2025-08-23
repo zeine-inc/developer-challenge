@@ -1,12 +1,13 @@
-from fastapi import HTTPException
+from fastapi import APIRouter, HTTPException
 from sqlalchemy.exc import IntegrityError
 
-from database.database import Vendedor
+from database.database import Vendedor, SessionLocal
 from models.models import VendedorCreate, VendedorLogin
 from utils.criptografar import criptografar_email, hash_senha, verificar_senha
-from main import app, SessionLocal 
 
-@app.post("/cadastro")
+router = APIRouter(prefix="/vendedor", tags=["Vendedor"])
+
+@router.post("/cadastro")
 def cadastrar_vendedor(vendedor: VendedorCreate):
     db = SessionLocal()
     try:
@@ -25,12 +26,10 @@ def cadastrar_vendedor(vendedor: VendedorCreate):
     finally:
         db.close()
 
-@app.post("/login")
+@router.post("/login")
 def login_vendedor(vendedor: VendedorLogin):
     db = SessionLocal()
-
     try:
-        # Verificar e-mail
         email_codificado = criptografar_email(vendedor.email)
 
         vendedor_login = db.query(Vendedor).filter(
@@ -40,10 +39,14 @@ def login_vendedor(vendedor: VendedorLogin):
         if not vendedor_login:
             raise HTTPException(status_code=402, detail="Credenciais incorretas")
         
-        # Verifica a senha
         if not verificar_senha(vendedor.senha, vendedor_login.senha):
             raise HTTPException(status_code=401, detail="Senha incorreta")
         
-        return {"status": 200, "id": vendedor_login.id, "nome": vendedor_login.nome, "email": vendedor_login.email}
+        return {
+            "status": 200,
+            "id": vendedor_login.id,
+            "nome": vendedor_login.nome,
+            "email": vendedor_login.email
+        }
     finally:
         db.close()

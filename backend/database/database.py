@@ -1,11 +1,13 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Table
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy.orm import declarative_base, sessionmaker
 from os import getenv
 from dotenv import load_dotenv
+from sqlalchemy.orm import sessionmaker
+
 
 load_dotenv()
-
 Base = declarative_base()
+
 
 class VendedorContato(Base):
     __tablename__ = "vendedor_contato"
@@ -30,3 +32,5 @@ class Contato(Base):
 
 engine = create_engine(getenv("DATABASE_URL"))
 Base.metadata.create_all(engine)
+SessionLocal = sessionmaker(bind=engine, autoflush=False)
+

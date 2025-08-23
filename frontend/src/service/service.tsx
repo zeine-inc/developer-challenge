@@ -8,7 +8,7 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function cadastrar({ ...props }: InterfaceCadastro) {
   try {
-    const response = await fetch(`${apiUrl}/cadastro`, {
+    const response = await fetch(`${apiUrl}/vendedor/cadastro`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -35,7 +35,7 @@ export async function cadastrar({ ...props }: InterfaceCadastro) {
 
 export async function login({ ...props }: InterfaceLogin) {
   try {
-    const response = await fetch(`${apiUrl}/login`, {
+    const response = await fetch(`${apiUrl}/vendedor/login`, {
       headers: {
         "Content-type": "application/json",
       },
@@ -63,7 +63,9 @@ export async function login({ ...props }: InterfaceLogin) {
 
 export async function pegarContatos(id_vendedor: number) {
   try {
-    const response = await fetch(`${apiUrl}/vendedor/${id_vendedor}/contatos`);
+    const response = await fetch(
+      `${apiUrl}/contato/vendedor/${id_vendedor}/contatos`
+    );
     const data = await response.json();
 
     if (response.ok) {
@@ -90,7 +92,7 @@ export async function adicionarContato(contato: Contato, vendedor_id: string) {
       formData.append("foto", contato.foto);
     }
 
-    const response = await fetch(`${apiUrl}/cadastrarContato`, {
+    const response = await fetch(`${apiUrl}/contato/cadastrarContato`, {
       method: "POST",
       body: formData,
     });
@@ -125,7 +127,7 @@ function adicionarContatoNaSession(data: any) {
 
 export async function excluirContato(vendedor_id: string, contato_id: number) {
   try {
-    const response = await fetch(`${apiUrl}/exlcuirContato`, {
+    const response = await fetch(`${apiUrl}/contato/exlcuirContato`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -151,7 +153,7 @@ export async function editarContato(contato: any) {
 
   try {
     const response = await fetch(
-      `${apiUrl}/editarContato/${contato.vendedor_id}/${contato.contato_id}`,
+      `${apiUrl}/contato/editarContato/${contato.vendedor_id}/${contato.contato_id}`,
       {
         method: "PUT",
         body: formData,

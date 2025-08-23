@@ -1,14 +1,16 @@
-from fastapi import HTTPException, UploadFile, File, Form, Path, Body
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Path, Body
 from sqlalchemy.exc import IntegrityError
-import cloudinary
 import cloudinary.uploader
 
-from database.database import Vendedor, Contato, VendedorContato
-from utils.criptografar import criptografar_email, criptografar_telefone, descriptografar_email, descriptografar_telefone
-from main import app, SessionLocal
+from database.database import Vendedor, Contato, VendedorContato, SessionLocal
+from utils.criptografar import (
+    criptografar_email, criptografar_telefone,
+    descriptografar_email, descriptografar_telefone
+)
 
+router = APIRouter(prefix="/contato", tags=["Contato"])
 
-@app.post("/cadastrarContato")
+@router.post("/cadastrarContato")
 async def cadastrar_contatos(
     vendedor_id: int = Form(...),
     nome: str = Form(...),
@@ -78,7 +80,7 @@ async def cadastrar_contatos(
         db.rollback()
         raise HTTPException(status_code=400, detail="Erro de integridade no banco de dados")
 
-@app.put("/editarContato/{vendedor_id}/{contato_id}")
+@router.put("/editarContato/{vendedor_id}/{contato_id}")
 async def editar_contato(
     vendedor_id: int = Path(...),
     contato_id: int = Path(...),
@@ -152,7 +154,7 @@ async def editar_contato(
         db.rollback()
         raise HTTPException(status_code=400, detail="Erro de integridade no banco de dados")
     
-@app.get("/vendedor/{vendedor_id}/contatos")
+@router.get("/vendedor/{vendedor_id}/contatos")
 def listar_contatos_vendedor(vendedor_id: int = Path(...)):
     db = SessionLocal()
     try:
@@ -186,7 +188,7 @@ def listar_contatos_vendedor(vendedor_id: int = Path(...)):
     finally:
         db.close()
 
-@app.put("/exlcuirContato")
+@router.put("/exlcuirContato")
 def excluir_contato(data: dict = Body(...)):
     vendedor_id = data.get("vendedor_id");
     contato_id = data.get("contato_id");
