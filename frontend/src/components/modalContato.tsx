@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import type { Contato } from "../interfaces/interfaces";
 import ImageUploader from "./imagem_uploader";
-import { adicionarContato } from "../service/service";
+import { adicionarContato, editarContato } from "../service/service";
 
 import Fechar from "../../public/icons/cancel.png";
 import Perfil from "../../public/images/perfil.png";
@@ -46,29 +46,61 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
   }, [tipo, contato]);
 
   const salvarContato = async () => {
-    const novoContato: Contato = {
-      nome,
-      telefone,
-      email,
-      relacao,
-      foto: fotoFile as File,
-    };
+    if (!id_vendedor) return;
 
-    setLabelButton("Salvando...");
-    try {
-      const responseStatus = await adicionarContato(novoContato, id_vendedor!);
+    if (tipo.toLowerCase() === "edit" && contato) {
+      // Cópia para guardar apenas informações alteradas.
+      let copiaContato: any = { vendedor_id: Number(id_vendedor) };
+      copiaContato.contato_id = contato.contato_id;
 
-      if (responseStatus === 200) {
-        setLabelButton("Contato Salvo");
-        setTimeout(() => onClose(), 1000);
-      } else {
+      if (nome !== contato!.nome) copiaContato.nome = nome;
+      if (email !== contato.email) copiaContato.email = email;
+      if (telefone !== contato.telefone) copiaContato.telefone = telefone;
+      if (relacao !== contato.relacao) copiaContato.relacao = relacao;
+      if (foto !== contato.foto && fotoFile) copiaContato.foto = fotoFile;
+      setLabelButton("Salvando...");
+      try {
+        const responseStatus = await editarContato(copiaContato);
+
+        if (responseStatus === 200) {
+          setLabelButton("Contato Salvo");
+          setTimeout(() => onClose(), 1000);
+        } else {
+          setLabelButton("Erro ao salvar");
+          setTimeout(() => setLabelButton("Salvar"), 2000);
+        }
+      } catch (e) {
+        console.error(e);
         setLabelButton("Erro ao salvar");
         setTimeout(() => setLabelButton("Salvar"), 2000);
       }
-    } catch (e) {
-      console.error(e);
-      setLabelButton("Erro ao salvar");
-      setTimeout(() => setLabelButton("Salvar"), 2000);
+    } else {
+      const novoContato: Contato = {
+        nome,
+        telefone,
+        email,
+        relacao,
+        foto: fotoFile as File,
+      };
+      setLabelButton("Salvando...");
+      try {
+        const responseStatus = await adicionarContato(
+          novoContato,
+          id_vendedor!
+        );
+
+        if (responseStatus === 200) {
+          setLabelButton("Contato Salvo");
+          setTimeout(() => onClose(), 1000);
+        } else {
+          setLabelButton("Erro ao salvar");
+          setTimeout(() => setLabelButton("Salvar"), 2000);
+        }
+      } catch (e) {
+        console.error(e);
+        setLabelButton("Erro ao salvar");
+        setTimeout(() => setLabelButton("Salvar"), 2000);
+      }
     }
   };
 
