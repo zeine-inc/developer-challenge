@@ -17,7 +17,7 @@ async def cadastrar_contatos(
     email: str = Form(...),
     telefone: str = Form(...),
     relacao: str = Form(...),
-    foto: UploadFile = File(...)
+    foto: UploadFile | None = File(None)
 ):
     db = SessionLocal()
 
@@ -33,8 +33,11 @@ async def cadastrar_contatos(
         ).first()
 
         if not contato:
-            resultado_upload = cloudinary.uploader.upload(foto.file)
-            url_imagem = resultado_upload.get("secure_url")
+            if foto:
+                resultado_upload = cloudinary.uploader.upload(foto.file)
+                url_imagem = resultado_upload.get("secure_url")
+            else:
+                url_imagem = "https://res.cloudinary.com/do4mpbste/image/upload/v1755986340/perfil_szewar.png"
 
             if not url_imagem:
                 raise HTTPException(status_code=500, detail="Erro ao fazer upload da imagem")
