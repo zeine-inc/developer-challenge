@@ -4,9 +4,11 @@ import type {
   InterfaceLogin,
 } from "../interfaces/interfaces";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export async function cadastrar({ ...props }: InterfaceCadastro) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/cadastro", {
+    const response = await fetch(`${apiUrl}/cadastro`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -26,14 +28,14 @@ export async function cadastrar({ ...props }: InterfaceCadastro) {
       return response.status;
     }
   } catch (e) {
-    console.error(`Erro ao cadastrar: ${e} `);
+    console.error(`Erro ao cadastrar: ${e}`);
     return 500;
   }
 }
 
 export async function login({ ...props }: InterfaceLogin) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/login", {
+    const response = await fetch(`${apiUrl}/login`, {
       headers: {
         "Content-type": "application/json",
       },
@@ -61,9 +63,7 @@ export async function login({ ...props }: InterfaceLogin) {
 
 export async function pegarContatos(id_vendedor: number) {
   try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/vendedor/${id_vendedor}/contatos`
-    );
+    const response = await fetch(`${apiUrl}/vendedor/${id_vendedor}/contatos`);
     const data = await response.json();
 
     if (response.ok) {
@@ -90,7 +90,7 @@ export async function adicionarContato(contato: Contato, vendedor_id: string) {
       formData.append("foto", contato.foto);
     }
 
-    const response = await fetch("http://127.0.0.1:8000/cadastrarContato", {
+    const response = await fetch(`${apiUrl}/cadastrarContato`, {
       method: "POST",
       body: formData,
     });
@@ -111,12 +111,10 @@ export async function adicionarContato(contato: Contato, vendedor_id: string) {
 
 function adicionarContatoNaSession(data: any) {
   try {
-    // Recupera os contatos atuais da session
     const contatosStr = sessionStorage.getItem("contatos");
     const contatos: Contato[] = contatosStr ? JSON.parse(contatosStr) : [];
 
     const novoContato = { ...data };
-
     contatos.push(novoContato);
 
     sessionStorage.setItem("contatos", JSON.stringify(contatos));
@@ -127,7 +125,7 @@ function adicionarContatoNaSession(data: any) {
 
 export async function excluirContato(vendedor_id: string, contato_id: number) {
   try {
-    const response = await fetch("http://127.0.0.1:8000/exlcuirContato", {
+    const response = await fetch(`${apiUrl}/exlcuirContato`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json",
@@ -153,7 +151,7 @@ export async function editarContato(contato: any) {
 
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/editarContato/${contato.vendedor_id}/${contato.contato_id}`,
+      `${apiUrl}/editarContato/${contato.vendedor_id}/${contato.contato_id}`,
       {
         method: "PUT",
         body: formData,
