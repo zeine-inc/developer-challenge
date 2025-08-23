@@ -119,8 +119,8 @@ async def editar_contato(
 
         # Atualiza ou cria a associação vendedor-contato
         assoc = db.query(VendedorContato).filter_by(
-            vendedor_id=vendedor.id,
-            contato_id=contato.id
+            id_vendedor=vendedor.id,
+            id_contato=contato.id
         ).first()
 
         if assoc:
