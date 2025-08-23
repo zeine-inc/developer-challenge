@@ -172,7 +172,7 @@ def listar_contatos_vendedor(vendedor_id: int = Path(...)):
         # Retorna lista de contatos com relacao
         contatos = [
             {
-                "id": contato.id,
+                "contato_id": contato.id,
                 "nome": contato.nome,
                 "email": descriptografar_email(contato.email),
                 "telefone": descriptografar_telefone(contato.telefone),
