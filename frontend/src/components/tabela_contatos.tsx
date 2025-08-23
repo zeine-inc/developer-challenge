@@ -1,4 +1,5 @@
 import { useState } from "react";
+import React from "react";
 
 import Button, { ButtonVariant } from "../components/button";
 import IconButton from "../components/iconbutton";
@@ -135,72 +136,78 @@ export default function TabelaContatos({
         </thead>
 
         <tbody>
-          {contatosFiltrados.map((contato, idx) => {
+          {contatosFiltrados.map((contato) => {
             const desbloqueado =
-              desbloqueados.includes(idx) || desbloquearTodos;
+              desbloqueados.includes(contato.contato_id!) || desbloquearTodos;
 
             return (
-              <tr key={idx} className="align-middle">
-                {/* Nome + Imagem */}
-                <td className="py-8">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={contato.foto as string}
-                      className="w-[3rem] h-[3rem] rounded-xl"
-                    />
-                    <div>
-                      <p className="text-[var(--body)] text-[0.875rem] font-medium">
-                        {contato.nome}
-                      </p>
-                      <p className="text-[var(--muted)] text-[0.75rem]">
-                        {contato.relacao}
-                      </p>
+              <React.Fragment key={contato.contato_id}>
+                <tr className="align-middle">
+                  <td className="py-8">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={contato.foto as string}
+                        className="w-12 h-12 rounded-xl"
+                      />
+                      <div>
+                        <p className="text-[var(--body)] text-sm font-medium">
+                          {contato.nome}
+                        </p>
+                        <p className="text-[var(--muted)] text-xs">
+                          {contato.relacao}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </td>
+                  </td>
+                  <td className="text-[var(--body)] text-sm py-4">
+                    {desbloqueado
+                      ? contato.telefone
+                      : "*".repeat(contato.telefone.length)}
+                  </td>
+                  <td className="text-[var(--body)] text-sm py-4">
+                    {desbloqueado
+                      ? contato.email
+                      : "*".repeat(contato.email.length)}
+                  </td>
+                  <td className="py-4">
+                    <div className="flex lg:flex-row gap-2 md:flex-col md:w-max md:items-center">
+                      <Button
+                        icon={Lapis}
+                        label="Editar"
+                        variant={ButtonVariant.Tertiary}
+                        onClick={() => {
+                          setTipoModal("edit");
+                          setContatoSelecionado(contato);
+                          setMostrarModalContato(true);
+                        }}
+                      />
+                      <div className="md:flex md:gap-2">
+                        <IconButton
+                          border={true}
+                          imagem={desbloqueado ? CadeadoAberto : CadeadoFechado}
+                          ativo={false}
+                          onClick={() =>
+                            abrirModalOuBloquear(contato.contato_id!)
+                          }
+                        />
+                        <IconButton
+                          border={true}
+                          imagem={Lixeira}
+                          ativo={false}
+                          onClick={() => removerContato(contato.contato_id!)}
+                        />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
 
-                {/* Telefone */}
-                <td className="text-[var(--body)] text-[0.875rem] py-4">
-                  {desbloqueado
-                    ? contato.telefone
-                    : "*".repeat(contato.telefone.length)}
-                </td>
-
-                {/* Email */}
-                <td className="text-[var(--body)] text-[0.875rem] py-4">
-                  {desbloqueado
-                    ? contato.email
-                    : "*".repeat(contato.email.length)}
-                </td>
-
-                {/* Ações */}
-                <td className="py-4">
-                  <div className="flex gap-2">
-                    <Button
-                      icon={Lapis}
-                      label="Editar"
-                      variant={ButtonVariant.Tertiary}
-                      onClick={() => {
-                        setTipoModal("edit");
-                        setContatoSelecionado(contato);
-                        setMostrarModalContato(true);
-                      }}
-                    />
-                    <IconButton
-                      border={true}
-                      imagem={desbloqueado ? CadeadoAberto : CadeadoFechado}
-                      ativo={false}
-                      onClick={() => abrirModalOuBloquear(idx)}
-                    />
-                    <IconButton
-                      border={true}
-                      imagem={Lixeira}
-                      ativo={false}
-                      onClick={() => removerContato(contato.contato_id!)}
-                    />
-                  </div>
-                </td>
-              </tr>
+                {/* Separador */}
+                <tr>
+                  <td colSpan={4}>
+                    <hr className="h-px w-full my-4 bg-[var(--muted)] border-0" />
+                  </td>
+                </tr>
+              </React.Fragment>
             );
           })}
         </tbody>

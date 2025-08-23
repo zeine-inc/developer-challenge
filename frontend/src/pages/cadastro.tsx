@@ -73,7 +73,7 @@ export function PageCadastro() {
     <main className="flex h-screen">
       <PageApresentacao />
 
-      <section className="bg-[var(--background-secondary)] w-[30vw] h-screen flex flex-col justify-center px-25">
+      <section className="bg-[var(--background-secondary)] md:w-full lg:w-[30vw] h-screen flex flex-col justify-center px-25">
         <LinkSingLog href="/" page="Cadastro" />
 
         {/* Conteúdo central */}

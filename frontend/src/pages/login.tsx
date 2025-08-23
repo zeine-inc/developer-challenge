@@ -47,10 +47,10 @@ export function PageLogin() {
     <main className="flex h-screen">
       <PageApresentacao />
 
-      <section className="bg-[var(--background-secondary)] w-[30vw] h-screen flex flex-col justify-center px-25">
+      <section className="bg-[var(--background-secondary)] md:w-full lg:w-[30vw] h-screen flex flex-col justify-center px-25">
         <LinkSingLog href="/cadastro" page="Login" />
 
-        <div className="max-w-sm mx-auto w-full space-y-6 my-[15rem]">
+        <div className="mx-auto w-full space-y-6 my-[15rem]">
           <h2 className="text-2xl text-[1.5rem] font-bold mb-6 text-[var(--primary)]">
             Acessar conta
           </h2>

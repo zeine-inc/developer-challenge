@@ -94,7 +94,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
   return (
     <section
       aria-label="Janela flutuante"
-      className="absolute inset-0 flex justify-center items-center backdrop-blur-md">
+      className="absolute inset-0 flex justify-center items-center backdrop-blur-md z-20">
       <div className="bg-[var(--background-primary)] p-6 rounded-2xl w-[21rem] h-max relative">
         {/* Header */}
         <div className="flex justify-between items-center">

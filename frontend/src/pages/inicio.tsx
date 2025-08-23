@@ -47,16 +47,19 @@ export default function PageInicio() {
   }
 
   return (
-    <section aria-label="Página de contatos" className="flex">
+    <section
+      aria-label="Página de contatos"
+      className="flex flex-col lg:flex-row">
       <SideBar />
-      <div className="mt-[8rem] bg-[var(--background-secondary)] w-[80%] h-[80vh] rounded-[3rem]">
-        <div className="flex items-center justify-between gap-4 p-4 rounded-lg mt-[2rem]">
-          <h2 className="ml-[5rem] text-[2rem] font-bold text-white">
+
+      <div className="mt-20 md:mx-10 lg:mt-32 bg-[var(--background-secondary)] w-full lg:w-4/5 h-[70vh] lg:h-[80vh] rounded-3xl mx-auto lg:mx-0">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 p-4 rounded-lg mt-8 lg:mt-8">
+          <h2 className="ml-0 lg:ml-20 text-xl sm:text-2xl lg:text-3xl font-bold text-white">
             Lista de contatos
           </h2>
 
-          <div className="flex gap-[1rem] p-[1rem]">
-            <div className="flex-1 w-[25rem]">
+          <div className="flex flex-col sm:flex-row gap-4 p-4">
+            <div className="flex-1 w-full sm:w-64 md:w-80">
               <TextField
                 label=""
                 input={busca}
@@ -71,34 +74,32 @@ export default function PageInicio() {
               setModalAdicionarContato={setModalAdicionarContato}
             />
 
-            {/* Cadeado global que abre modal de senha */}
             <IconButton
               border={true}
               imagem={desbloquearTodos ? CadeadoAberto : CadeadoFechado}
               ativo={false}
               onClick={() => {
-                if (desbloquearTodos === true) {
-                  setDesbloquearTodos(false);
-                } else {
-                  setModalSenhaGlobal(true);
-                }
+                if (desbloquearTodos) setDesbloquearTodos(false);
+                else setModalSenhaGlobal(true);
               }}
             />
           </div>
         </div>
 
-        <div className="flex px-[4rem] w-full">
+        <div className="flex flex-col lg:flex-row px-4 lg:px-16 w-full">
           <FiltroAlfabeto
             letras={"ABCDEFGHIJKLMNO".split("")}
             onSelecionar={setLetraFiltrar}
           />
 
-          <div aria-label="Sessão de Contatos" className="flex flex-col w-full">
-            <div aria-label="Resultado do filtro" className="p-[2rem]">
-              <p className="font-bold text-[0.875rem] text-[var(--primary)]">
+          <div
+            aria-label="Sessão de Contatos"
+            className="flex flex-col w-full mt-4 lg:mt-0">
+            <div aria-label="Resultado do filtro" className="p-4">
+              <p className="font-bold text-xs sm:text-sm md:text-base text-[var(--primary)]">
                 {letraFiltar}
               </p>
-              <hr className="h-px w-[102%] my-4 bg-[var(--primary)] border-0" />
+              <hr className="h-px lg:w-[103%] md:w-full my-4 bg-[var(--primary)] border-0" />
             </div>
 
             <TabelaContatos
@@ -110,7 +111,6 @@ export default function PageInicio() {
         </div>
       </div>
 
-      {/* Modal global de senha */}
       {modalSenhaGlobal && (
         <ModalInformacoes
           onClose={() => setModalSenhaGlobal(false)}

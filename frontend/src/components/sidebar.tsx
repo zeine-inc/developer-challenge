@@ -25,9 +25,17 @@ export default function SideBar() {
   return (
     <section
       aria-label="Menu de Opções"
-      className="h-[100vh] flex flex-col justify-between p-[5rem] items-center">
+      className="
+    flex 
+    lg:flex-col 
+    justify-between 
+    p-[5rem] 
+    items-center
+    w-full h-[5rem]        /* Altura pequena para mobile */
+    lg:h-[100vh] lg:w-auto /* Altura total e largura automática no lg */
+  ">
       <img src={Logo} className="w-[1.81rem] h-[1.98rem]" />
-      <div className="flex flex-col gap-[1rem] w-max text-center">
+      <div className="flex lg:flex-col gap-[1rem] w-max text-center">
         {acoesIcones.map((acao) => (
           <IconButton
             key={acao.id}
