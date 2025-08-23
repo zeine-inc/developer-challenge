@@ -144,3 +144,24 @@ export async function excluirContato(vendedor_id: string, contato_id: number) {
     return 500;
   }
 }
+
+export async function editarContato(contato: any) {
+  const formData = new FormData();
+  Object.keys(contato).forEach((key) => {
+    formData.append(key, contato[key]);
+  });
+
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/editarContato/${contato.vendedor_id}/${contato.contato_id}`,
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
+    return response.status;
+  } catch (e) {
+    console.error("Erro ao editar contato:", e);
+    return 500;
+  }
+}
