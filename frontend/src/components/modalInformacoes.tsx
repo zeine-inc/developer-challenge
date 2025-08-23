@@ -14,7 +14,7 @@ export default function ModalInformacoes({ onClose, onConfirm }: ModalProps) {
   return (
     <section
       aria-label="Janela flutuante"
-      className="absolute inset-0 flex justify-center items-center backdrop-blur-md">
+      className="absolute inset-0 flex justify-center items-center backdrop-blur-md z-20">
       <div className="bg-[var(--background-primary)] p-6 rounded-2xl w-[21rem] h-[19rem] relative">
         <div className="flex justify-between items-center">
           <h2 className="text-white text-lg font-bold">
