@@ -1,122 +1,123 @@
-# Desafio Técnico | Guard - Gerenciador de Contatos 💂‍♂️
+# Painel de Controle de Vendedor
 
-![Capa](./images/cover.jpg)
-
-## 🎯 Objetivo
-
-Desenvolver 3 telas de um sistema web para **gestão de contatos em um marketplace**, baseado no design fornecido via Figma.
-
-O sistema simula o **painel de controle de um vendedor**, onde é possível cadastrar, visualizar e gerenciar seus contatos.
-
-- **Protótipo Figma**:
-  [https://www.figma.com/community/file/1426246785677931248](https://www.figma.com/community/file/1426246785677931248)
-
-- **Prazo de entrega**:
-  4 dias a partir do recebimento.
+Este projeto é um **Painel de Controle para Vendedores**, permitindo que vendedores se cadastrem, façam login e gerenciem seus contatos.
 
 ---
 
-## 📌 Requisitos
+## 🔹 Modelagem do Banco de Dados
 
-### Funcionalidades obrigatórias
+O banco de dados possui três tabelas principais:
 
-As seguintes telas e recursos devem ser implementados:
+- **VENDEDOR**: armazena os dados do vendedor.
+- **CONTATO**: armazena os contatos gerenciados pelo vendedor.
+- **VENDEDOR_CONTATO**: tabela intermediária que representa o relacionamento muitos-para-muitos entre vendedores e contatos.
 
-1. **Tela de Login**
+### Diagrama ER (Crow’s Foot)
 
-   - Autenticação com e-mail e senha.
-   - Validação de campos.
+```mermaid
+erDiagram
+    VENDEDOR {
+        int id PK
+        string nome
+        string email
+        string senha
+    }
 
-2. **Tela de Listagem de Contatos**
+    CONTATO {
+        int id PK
+        string nome
+        string email
+        string telefone
+        string foto
+    }
 
-   - Exibe todos os contatos cadastrados.
-   - Permite filtro por letra inicial do nome.
-   - Contatos exibidos com foto, nome, telefone e e-mail.
+    VENDEDOR_CONTATO {
+        int id_vendedor FK
+        int id_contato FK
+        string relacao
+    }
 
-3. **Tela de Cadastro de Contato**
+    VENDEDOR ||--o{ VENDEDOR_CONTATO : "tem"
+    CONTATO ||--o{ VENDEDOR_CONTATO : "é gerenciado"
+```
 
-   - Upload de foto do contato.
-   - Campos para nome, telefone, e-mail.
-   - Botões para **Salvar** ou **Cancelar**.
+## 🔹 Endpoints da API
 
-4. **Backend Funcional**
+A api, localmente, rodará na porta **8000**. Para visualizar as requisições visualmente, utilizar **localhost/8000/docs**.
 
-   - Deve suportar o armazenamento de usuários, autenticação, contatos e seus atributos.
+### 1. Login
 
-5. **Banco de dados**
+O **vendedor** pode fazer login utilizando email e senha.
 
-   - PostgreSQL ou MongoDB (ou outro de sua escolha, se bem justificado).
+```python
+@app.post("/login")
+def login_vendedor(vendedor: VendedorLogin)
+```
 
-6. **Mensagem secreta**
+### 2. Cadastro
 
-   - Ao manter o mouse sobre o botão “Adicionar contato” por 7 segundos, surge um tooltip especial:
-     `“Tá esperando o quê? Boraa moeer!! 🚀”`
+O vendedor pode se cadastrar utilizando **nome**, **email** e **senha**.
 
----
+```python
+@app.post("/cadastro")
+def cadastrar_vendedor(vendedor: VendedorLogin):
+```
 
-### Diferenciais (opcionais, mas recomendados)
+### 3. Cadastar contato
 
-1. **Deploy**
+Permite que um **vendedor** cadastre um novo contato com nome, email, telefone e foto.
 
-   - Publique o front-end (ex: Vercel) e o back-end (ex: Render) se possível.
-   - Inclua os links no README.
+```python
+@app.post("/cadastrarContato")
+def cadastrar_contatos(
+    vendedor_id: int,
+    nome: str = Form(...),
+    email: str = Form(...),
+    telefone: str = Form(...),
+    foto: UploadFile = File(...)
+)
+```
 
-2. **Documentação**
+### 4. Editar contato
 
-   - Explique a estrutura do projeto, como executar, e decisões técnicas.
+Permite atualizar os dados de um contato existente, incluindo nome, email, telefone e foto.
 
-3. **Testes automatizados**
+```python
+@app.put("/editarContato/{vendedor_id}/{contato_id}")
+def editar_contato(
+    vendedor_id: int = Path(...),
+    contato_id: int = Path(...),
+    nome: str = Form(None),
+    email: str = Form(None),
+    telefone: str = Form(None),
+    foto: UploadFile = File(None)
+)
+```
 
-   - Testes simples de integração (API) e/ou de componentes (UI).
+### 5. Listar Contatos do Vendedor
 
-4. **Diagrama ERD**
+Retorna todos os contatos associados a um vendedor específico.
 
-   - Um pequeno diagrama mostrando entidades e relações (usuários, contatos, atributos).
+```python
+@app.get("/vendedor/{vendedor_id}/contatos")
+def listar_contatos_vendedor(vendedor_id: int = Path(...))
+```
 
----
+## Rodando imagem com Docker 🐋
 
-## 🛠️ Stacks recomendadas
+Clonando o repositório
 
-Você pode usar qualquer tecnologia, mas sugerimos:
+```bash
+git clone https://github.com/andersonstack/developer-challenge.git
+cd developer-challenge
 
-- **Frontend**: Next.js ou React (web)
-- **Backend**: FastAPI ou NestJS
-- **Banco de dados**: PostgreSQL ou MongoDB
+```
 
----
+Fazendo o build das depedências
 
-## 📦 Entregáveis
+```bash
+docker compose up --build -d
+```
 
-1. **Repositório com o código-fonte**
-
-   - GitHub, GitLab ou Bitbucket.
-
-2. **Instruções de execução**
-
-   - Como rodar o frontend e backend localmente.
-   - Se possível, um script ou Docker.
-
-3. **Demonstração visual**
-
-   - Imagens ou vídeo da aplicação em funcionamento.
-
-4. **(Opcional) Link do Deploy**
-
-   - Front e/ou back publicado.
-
----
-
-## 🔍 O que será avaliado
-
-- Organização e clareza do código
-- Estrutura do projeto
-- Boas práticas de autenticação e manipulação de dados
-- UX simples e funcional
-- Atenção aos detalhes (como a mensagem secreta 👀)
-
----
-
-## 📩 Dúvidas?
-
-Se tiver qualquer dúvida durante o desafio, envie uma mensagem. Estamos aqui para ajudar. Boa sorte e...
-**Boraa moeer!! 🔥🚀**
+- **Backend** vai rodar no _localhost:8000_
+- **Frontend** vai rodar no _localhost:3000_
