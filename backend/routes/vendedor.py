@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException
-from sqlalchemy.exc import IntegrityError
+from fastapi import APIRouter, HTTPException, Body
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from database.database import Vendedor, SessionLocal
 from models.models import VendedorCreate, VendedorLogin
@@ -48,5 +48,37 @@ def login_vendedor(vendedor: VendedorLogin):
             "nome": vendedor_login.nome,
             "email": vendedor_login.email
         }
+    finally:
+        db.close()
+
+@router.post("/editarVendedor")
+def editar_vendedor(
+    id: int = Body(..., embed=True),
+    nome: str | None = Body(None, embed=True),
+    senha: str | None = Body(None, embed=True)
+):
+    db = SessionLocal()
+    try:
+        vendedor = db.query(Vendedor).filter(Vendedor.id == id).first()
+        if not vendedor:
+            raise HTTPException(status_code=404, detail="Vendedor não encontrado")
+
+        # Atualiza os campos enviados
+        if nome is not None:
+            vendedor.nome = nome
+        if senha is not None:
+            vendedor.senha = hash_senha(senha)
+
+        db.commit()
+        db.refresh(vendedor)
+        return {
+            "status": "sucesso",
+            "id": vendedor.id,
+            "nome": vendedor.nome
+        }
+
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Erro ao atualizar vendedor")
     finally:
         db.close()
