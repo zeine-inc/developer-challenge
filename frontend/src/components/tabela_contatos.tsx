@@ -17,11 +17,13 @@ import Lapis from "../../public/icons/edit.png";
 interface TabelaContatosProps {
   desbloquearTodos: boolean;
   filtrar: string;
+  busca: string;
 }
 
 export default function TabelaContatos({
   desbloquearTodos,
   filtrar,
+  busca,
 }: TabelaContatosProps) {
   const contatosSession = sessionStorage.getItem("contatos");
   const contatos: Contato[] = contatosSession
@@ -39,9 +41,21 @@ export default function TabelaContatos({
   const [tipoModal, setTipoModal] = useState<string>("add");
 
   const contatosFiltrados = contatos
-    .filter((c) =>
-      filtrar ? c.nome.toUpperCase().startsWith(filtrar.toUpperCase()) : true
-    )
+    .filter((c) => {
+      const nomeUpper = c.nome.toUpperCase();
+      const filtrarUpper = filtrar?.toUpperCase() || "";
+      const buscaUpper = busca?.toUpperCase() || "";
+
+      // Filtrar por letra inicial
+      const filtrarOk = filtrarUpper
+        ? nomeUpper.startsWith(filtrarUpper)
+        : true;
+
+      // Buscar por substring
+      const buscaOk = buscaUpper ? nomeUpper.includes(buscaUpper) : true;
+
+      return filtrarOk && buscaOk;
+    })
     .sort((a, b) => a.nome.localeCompare(b.nome));
 
   if (contatosFiltrados.length === 0) {

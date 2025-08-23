@@ -105,6 +105,7 @@ export default function PageInicio() {
             <TabelaContatos
               desbloquearTodos={desbloquearTodos}
               filtrar={letraFiltar}
+              busca={busca}
             />
           </div>
         </div>
