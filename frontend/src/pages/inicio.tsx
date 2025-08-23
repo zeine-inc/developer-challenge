@@ -8,7 +8,7 @@ import LinkQuebrado from "../../public/images/quebrado.png";
 
 import SideBar from "../components/sidebar";
 import TextField from "../components/text_field";
-import Button, { ButtonVariant } from "../components/button";
+import Button from "../components/button";
 import IconButton from "../components/iconbutton";
 import FiltroAlfabeto from "../components/filtrar";
 import TabelaContatos from "../components/tabela_contatos";
