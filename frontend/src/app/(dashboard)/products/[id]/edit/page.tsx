@@ -6,31 +6,51 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { 
-  Upload, 
-  X, 
-  Save, 
-  Eye, 
+import {
+  Upload,
+  X,
+  Save,
+  Eye,
   EyeOff,
   Package,
   DollarSign,
   Tag,
   FileText,
-  ArrowLeft
+  ArrowLeft,
 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import Link from 'next/link';
+import Image from 'next/image';
 
-import { productsAPI, showApiError, showApiSuccess } from '@/lib/api';
+import { showApiError, showApiSuccess } from '@/lib/api';
+import { productsAPI } from '@/services/productsAPI';
+
+// Interface para o produto
+interface Product {
+  id: string;
+  title: string;
+  description?: string;
+  price: number;
+  category?: string;
+  tags?: string;
+  status: 'draft' | 'active' | 'inactive' | 'sold';
+  imageUrl?: string;
+}
 
 // Schema de validação
 const productSchema = z.object({
-  title: z.string().min(1, 'Título é obrigatório').max(255, 'Título muito longo'),
+  title: z
+    .string()
+    .min(1, 'Título é obrigatório')
+    .max(255, 'Título muito longo'),
   description: z.string().optional(),
-  price: z.string().min(1, 'Preço é obrigatório').refine(
-    (val) => !isNaN(Number(val)) && Number(val) > 0,
-    'Preço deve ser um número maior que zero'
-  ),
+  price: z
+    .string()
+    .min(1, 'Preço é obrigatório')
+    .refine(
+      (val) => !isNaN(Number(val)) && Number(val) > 0,
+      'Preço deve ser um número maior que zero'
+    ),
   category: z.string().optional(),
   tags: z.string().optional(),
   status: z.enum(['draft', 'active', 'inactive', 'sold']).default('draft'),
@@ -39,10 +59,10 @@ const productSchema = z.object({
 type ProductFormData = z.infer<typeof productSchema>;
 
 // Componente de upload de imagem
-function ImageUpload({ 
-  imageUrl, 
-  onImageChange, 
-  onImageRemove 
+function ImageUpload({
+  imageUrl,
+  onImageChange,
+  onImageRemove,
 }: {
   imageUrl: string | null;
   onImageChange: (url: string) => void;
@@ -50,51 +70,46 @@ function ImageUpload({
 }) {
   const [uploading, setUploading] = useState(false);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) return;
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      if (acceptedFiles.length === 0) return;
 
-    const file = acceptedFiles[0];
-    
-    // Validação do arquivo
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
-      showApiError('Arquivo muito grande. Máximo 10MB.');
-      return;
-    }
+      const file = acceptedFiles[0];
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      showApiError('Tipo de arquivo não suportado. Use JPG, PNG ou WebP.');
-      return;
-    }
+      const maxSize = 10 * 1024 * 1024; // 10MB
+      if (file.size > maxSize) {
+        showApiError('Arquivo muito grande. Máximo 10MB.');
+        return;
+      }
 
-    setUploading(true);
-    try {
-      // Simular upload para Cloudinary
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      // Aqui você faria o upload real para Cloudinary
-      // Por enquanto, vamos simular
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const fakeUrl = `https://images.unsplash.com/photo-${Math.random().toString(36).substring(7)}?w=800&h=600&fit=crop`;
-      onImageChange(fakeUrl);
-      showApiSuccess('Imagem enviada com sucesso!');
-    } catch (error) {
-      showApiError('Erro ao enviar imagem');
-    } finally {
-      setUploading(false);
-    }
-  }, [onImageChange]);
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        showApiError('Tipo de arquivo não suportado. Use JPG, PNG ou WebP.');
+        return;
+      }
+
+      setUploading(true);
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        const fakeUrl = `https://images.unsplash.com/photo-${Math.random().toString(36).substring(7)}?w=800&h=600&fit=crop`;
+        onImageChange(fakeUrl);
+        showApiSuccess('Imagem enviada com sucesso!');
+      } catch (error) {
+        showApiError('Erro ao enviar imagem');
+      } finally {
+        setUploading(false);
+      }
+    },
+    [onImageChange]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+      'image/*': ['.jpeg', '.jpg', '.png', '.webp'],
     },
     maxFiles: 1,
-    disabled: uploading
+    disabled: uploading,
   });
 
   return (
@@ -102,13 +117,22 @@ function ImageUpload({
       <label className="block text-sm font-medium text-gray-700">
         Imagem do produto
       </label>
-      
       {imageUrl ? (
         <div className="relative">
-          <img
+          <Image
             src={imageUrl}
             alt="Preview"
+            width={800}
+            height={600}
             className="w-full h-64 object-cover rounded-lg border border-gray-200"
+            style={{
+              width: '100%',
+              height: '16rem',
+              objectFit: 'cover',
+              borderRadius: '0.5rem',
+              border: '1px solid #e5e7eb',
+            }}
+            priority
           />
           <button
             type="button"
@@ -137,11 +161,11 @@ function ImageUpload({
           ) : (
             <div className="space-y-2">
               <p className="text-lg font-medium text-gray-900">
-                {isDragActive ? 'Solte a imagem aqui' : 'Clique ou arraste uma imagem'}
+                {isDragActive
+                  ? 'Solte a imagem aqui'
+                  : 'Clique ou arraste uma imagem'}
               </p>
-              <p className="text-sm text-gray-500">
-                PNG, JPG ou WebP até 10MB
-              </p>
+              <p className="text-sm text-gray-500">PNG, JPG ou WebP até 10MB</p>
             </div>
           )}
         </div>
@@ -151,9 +175,9 @@ function ImageUpload({
 }
 
 // Componente de editor de texto rico simples
-function RichTextEditor({ 
-  value, 
-  onChange 
+function RichTextEditor({
+  value,
+  onChange,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -161,7 +185,9 @@ function RichTextEditor({
   const [isPreview, setIsPreview] = useState(false);
 
   const formatText = (command: string) => {
-    const textarea = document.getElementById('description') as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      'description'
+    ) as HTMLTextAreaElement;
     if (!textarea) return;
 
     const start = textarea.selectionStart;
@@ -177,7 +203,10 @@ function RichTextEditor({
         formattedText = `*${selectedText}*`;
         break;
       case 'list':
-        formattedText = selectedText.split('\n').map(line => `- ${line}`).join('\n');
+        formattedText = selectedText
+          .split('\n')
+          .map((line) => `- ${line}`)
+          .join('\n');
         break;
       case 'link':
         formattedText = `[${selectedText}](URL)`;
@@ -186,7 +215,8 @@ function RichTextEditor({
         return;
     }
 
-    const newValue = value.substring(0, start) + formattedText + value.substring(end);
+    const newValue =
+      value.substring(0, start) + formattedText + value.substring(end);
     onChange(newValue);
   };
 
@@ -195,7 +225,10 @@ function RichTextEditor({
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       .replace(/^- (.*)/gm, '<li>$1</li>')
-      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="text-primary-600 hover:underline">$1</a>')
+      .replace(
+        /\[(.*?)\]\((.*?)\)/g,
+        '<a href="$2" class="text-primary-600 hover:underline">$1</a>'
+      )
       .split('\n')
       .map((line, i) => {
         if (line.startsWith('<li>')) {
@@ -217,14 +250,17 @@ function RichTextEditor({
           onClick={() => setIsPreview(!isPreview)}
           className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-900"
         >
-          {isPreview ? <FileText className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          {isPreview ? (
+            <FileText className="w-4 h-4" />
+          ) : (
+            <Eye className="w-4 h-4" />
+          )}
           <span>{isPreview ? 'Editar' : 'Visualizar'}</span>
         </button>
       </div>
 
       {!isPreview && (
         <div className="border border-gray-300 rounded-lg">
-          {/* Toolbar */}
           <div className="flex items-center space-x-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg">
             <button
               type="button"
@@ -260,8 +296,6 @@ function RichTextEditor({
               🔗
             </button>
           </div>
-
-          {/* Textarea */}
           <textarea
             id="description"
             value={value}
@@ -275,7 +309,7 @@ function RichTextEditor({
 
       {isPreview && (
         <div className="border border-gray-300 rounded-lg p-3 bg-white min-h-[120px]">
-          <div 
+          <div
             className="prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: renderPreview(value) }}
           />
@@ -290,7 +324,7 @@ export default function EditProductPage() {
   const params = useParams();
   const queryClient = useQueryClient();
   const productId = params.id as string;
-  
+
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const {
@@ -299,15 +333,33 @@ export default function EditProductPage() {
     watch,
     setValue,
     reset,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting },
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
   });
 
   // Buscar dados do produto
-  const { data: product, isLoading, error } = useQuery({
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery<Product | undefined>({
     queryKey: ['product', productId],
-    queryFn: () => productsAPI.getProduct(productId),
+    queryFn: async () => {
+      const result = await productsAPI.getProduct(productId);
+      // If the API returns null or a product missing required fields, return undefined
+      if (
+        !result ||
+        typeof result !== 'object' ||
+        !('id' in result) ||
+        !('title' in result) ||
+        !('price' in result) ||
+        !('status' in result)
+      ) {
+        return undefined;
+      }
+      return result as Product;
+    },
     enabled: !!productId,
   });
 
@@ -322,16 +374,17 @@ export default function EditProductPage() {
         tags: product.tags || '',
         status: product.status,
       });
-      setImageUrl(product.imageUrl);
+      setImageUrl(product.imageUrl || null);
     }
   }, [product, reset]);
 
   // Atualizar produto
   const updateProductMutation = useMutation({
-    mutationFn: (data: ProductFormData) => productsAPI.updateProduct(productId, {
-      ...data,
-      imageUrl,
-    }),
+    mutationFn: (data: ProductFormData) =>
+      productsAPI.update(productId, {
+        ...data,
+        imageUrl: imageUrl || undefined,
+      }),
     onSuccess: () => {
       showApiSuccess('Produto atualizado com sucesso!');
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -340,7 +393,7 @@ export default function EditProductPage() {
     },
     onError: (error) => {
       showApiError(error);
-    }
+    },
   });
 
   const onSubmit = (data: ProductFormData) => {
@@ -365,7 +418,7 @@ export default function EditProductPage() {
             <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -391,8 +444,12 @@ export default function EditProductPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center py-12">
           <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Produto não encontrado</h3>
-          <p className="text-gray-600 mb-6">O produto que você está tentando editar não existe ou foi removido.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Produto não encontrado
+          </h3>
+          <p className="text-gray-600 mb-6">
+            O produto que você está tentando editar não existe ou foi removido.
+          </p>
           <Link
             href="/products"
             className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2"
@@ -407,7 +464,6 @@ export default function EditProductPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link
@@ -419,24 +475,23 @@ export default function EditProductPage() {
           </Link>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Editar produto</h1>
-            <p className="text-gray-600 mt-1">Atualize as informações do seu produto</p>
+            <p className="text-gray-600 mt-1">
+              Atualize as informações do seu produto
+            </p>
           </div>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Coluna principal */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Informações básicas */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <Package className="w-5 h-5 mr-2" />
                 Informações básicas
               </h2>
-              
+
               <div className="space-y-4">
-                {/* Título */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Título do produto *
@@ -448,11 +503,12 @@ export default function EditProductPage() {
                     placeholder="Ex: iPhone 13 Pro Max 256GB"
                   />
                   {errors.title && (
-                    <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.title.message}
+                    </p>
                   )}
                 </div>
 
-                {/* Preço */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Preço *
@@ -467,11 +523,12 @@ export default function EditProductPage() {
                     />
                   </div>
                   {errors.price && (
-                    <p className="text-red-600 text-sm mt-1">{errors.price.message}</p>
+                    <p className="text-red-600 text-sm mt-1">
+                      {errors.price.message}
+                    </p>
                   )}
                 </div>
 
-                {/* Categoria */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Categoria
@@ -484,7 +541,6 @@ export default function EditProductPage() {
                   />
                 </div>
 
-                {/* Tags */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Tags
@@ -502,13 +558,12 @@ export default function EditProductPage() {
               </div>
             </div>
 
-            {/* Descrição */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <FileText className="w-5 h-5 mr-2" />
                 Descrição
               </h2>
-              
+
               <RichTextEditor
                 value={watch('description') || ''}
                 onChange={(value) => setValue('description', value)}
@@ -516,15 +571,13 @@ export default function EditProductPage() {
             </div>
           </div>
 
-          {/* Coluna lateral */}
           <div className="space-y-6">
-            {/* Upload de imagem */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <Upload className="w-5 h-5 mr-2" />
                 Imagem
               </h2>
-              
+
               <ImageUpload
                 imageUrl={imageUrl}
                 onImageChange={handleImageChange}
@@ -532,13 +585,12 @@ export default function EditProductPage() {
               />
             </div>
 
-            {/* Status */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <Eye className="w-5 h-5 mr-2" />
                 Status
               </h2>
-              
+
               <div className="space-y-3">
                 <label className="flex items-center">
                   <input
@@ -579,10 +631,11 @@ export default function EditProductPage() {
               </div>
             </div>
 
-            {/* Ações */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Ações</h2>
-              
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Ações
+              </h2>
+
               <div className="space-y-3">
                 <button
                   type="submit"
@@ -594,9 +647,11 @@ export default function EditProductPage() {
                   ) : (
                     <Save className="w-4 h-4" />
                   )}
-                  <span>{isSubmitting ? 'Salvando...' : 'Salvar alterações'}</span>
+                  <span>
+                    {isSubmitting ? 'Salvando...' : 'Salvar alterações'}
+                  </span>
                 </button>
-                
+
                 <Link
                   href={`/products/${productId}`}
                   className="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors text-center block"

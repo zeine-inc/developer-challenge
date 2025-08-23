@@ -3,20 +3,35 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  ArrowLeft, 
-  Edit, 
-  Trash2, 
-  Eye, 
-  Calendar, 
-  Tag, 
+import {
+  ArrowLeft,
+  Edit,
+  Trash2,
+  Eye,
+  Calendar,
+  Tag,
   DollarSign,
   Package,
   TrendingUp,
-  Heart
+  Heart,
 } from 'lucide-react';
 
 import { productsAPI, formatPrice, formatDate } from '@/lib/api';
+
+interface Product {
+  id: string;
+  title: string;
+  status: string;
+  imageUrl: string | null;
+  viewsCount: number;
+  likesCount: number;
+  price: number;
+  category?: string;
+  createdAt: string;
+  updatedAt: string;
+  tags?: string;
+  description?: string;
+}
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -24,29 +39,43 @@ export default function ProductDetailPage() {
   const productId = params.id as string;
 
   // Buscar dados do produto
-  const { data: product, isLoading, error } = useQuery({
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery<Product>({
     queryKey: ['product', productId],
-    queryFn: () => productsAPI.getProduct(productId),
+    queryFn: () => productsAPI.get(productId) as Promise<Product>,
     enabled: !!productId,
   });
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'inactive': return 'bg-gray-100 text-gray-800';
-      case 'draft': return 'bg-yellow-100 text-yellow-800';
-      case 'sold': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'inactive':
+        return 'bg-gray-100 text-gray-800';
+      case 'draft':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'sold':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'active': return 'Ativo';
-      case 'inactive': return 'Inativo';
-      case 'draft': return 'Rascunho';
-      case 'sold': return 'Vendido';
-      default: return status;
+      case 'active':
+        return 'Ativo';
+      case 'inactive':
+        return 'Inativo';
+      case 'draft':
+        return 'Rascunho';
+      case 'sold':
+        return 'Vendido';
+      default:
+        return status;
     }
   };
 
@@ -60,7 +89,7 @@ export default function ProductDetailPage() {
             <div className="h-4 bg-gray-200 rounded w-32 animate-pulse"></div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="aspect-square bg-gray-200 rounded-lg animate-pulse"></div>
           <div className="space-y-4">
@@ -79,8 +108,12 @@ export default function ProductDetailPage() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center py-12">
           <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Produto não encontrado</h3>
-          <p className="text-gray-600 mb-6">O produto que você está procurando não existe ou foi removido.</p>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Produto não encontrado
+          </h3>
+          <p className="text-gray-600 mb-6">
+            O produto que você está procurando não existe ou foi removido.
+          </p>
           <Link
             href="/products"
             className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg inline-flex items-center space-x-2"
@@ -106,16 +139,20 @@ export default function ProductDetailPage() {
             <span>Voltar</span>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{product.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {product.title}
+            </h1>
             <p className="text-gray-600 mt-1">Detalhes do produto</p>
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
-          <span className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(product.status)}`}>
+          <span
+            className={`px-3 py-1 text-sm font-medium rounded-full ${getStatusColor(product.status)}`}
+          >
             {getStatusLabel(product.status)}
           </span>
-          
+
           <Link
             href={`/products/${product.id}/edit`}
             className="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
@@ -149,14 +186,18 @@ export default function ProductDetailPage() {
               <div className="flex items-center justify-center mb-2">
                 <Eye className="w-5 h-5 text-gray-400" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{product.viewsCount}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {product.viewsCount}
+              </p>
               <p className="text-sm text-gray-600">Visualizações</p>
             </div>
             <div className="bg-white rounded-lg border border-gray-200 p-4 text-center">
               <div className="flex items-center justify-center mb-2">
                 <Heart className="w-5 h-5 text-gray-400" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{product.likesCount}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {product.likesCount}
+              </p>
               <p className="text-sm text-gray-600">Curtidas</p>
             </div>
           </div>
@@ -170,13 +211,17 @@ export default function ProductDetailPage() {
               <DollarSign className="w-5 h-5 text-gray-400" />
               <span className="text-sm font-medium text-gray-600">Preço</span>
             </div>
-            <p className="text-3xl font-bold text-primary-600">{formatPrice(product.price)}</p>
+            <p className="text-3xl font-bold text-primary-600">
+              {formatPrice(product.price)}
+            </p>
           </div>
 
           {/* Informações básicas */}
           <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Informações</h3>
-            
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Informações
+            </h3>
+
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Categoria</span>
@@ -184,23 +229,27 @@ export default function ProductDetailPage() {
                   {product.category || 'Não informada'}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Status</span>
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(product.status)}`}>
+                <span
+                  className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(product.status)}`}
+                >
                   {getStatusLabel(product.status)}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Criado em</span>
                 <span className="text-sm font-medium text-gray-900">
                   {formatDate(product.createdAt)}
                 </span>
               </div>
-              
+
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Última atualização</span>
+                <span className="text-sm text-gray-600">
+                  Última atualização
+                </span>
                 <span className="text-sm font-medium text-gray-900">
                   {formatDate(product.updatedAt)}
                 </span>
@@ -215,7 +264,7 @@ export default function ProductDetailPage() {
                 <Tag className="w-5 h-5 text-gray-400" />
                 <h3 className="text-lg font-semibold text-gray-900">Tags</h3>
               </div>
-              
+
               <div className="flex flex-wrap gap-2">
                 {product.tags.split(',').map((tag, index) => (
                   <span
@@ -232,9 +281,13 @@ export default function ProductDetailPage() {
           {/* Descrição */}
           {product.description && (
             <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Descrição</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Descrição
+              </h3>
               <div className="prose prose-sm max-w-none">
-                <p className="text-gray-700 whitespace-pre-wrap">{product.description}</p>
+                <p className="text-gray-700 whitespace-pre-wrap">
+                  {product.description}
+                </p>
               </div>
             </div>
           )}
@@ -244,7 +297,7 @@ export default function ProductDetailPage() {
       {/* Ações */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Ações</h3>
-        
+
         <div className="flex items-center space-x-4">
           <Link
             href={`/products/${product.id}/edit`}
@@ -253,7 +306,7 @@ export default function ProductDetailPage() {
             <Edit className="w-4 h-4" />
             <span>Editar produto</span>
           </Link>
-          
+
           <button
             onClick={() => {
               if (confirm('Tem certeza que deseja excluir este produto?')) {

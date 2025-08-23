@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Instalar dependências apenas quando necessário
 FROM base AS deps
@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Instalar dependências baseadas no arquivo package-lock.json preferido
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production
+RUN npm install --only=production.
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -19,7 +19,7 @@ COPY . .
 # Next.js coleta informações de telemetria anônimas sobre o uso geral.
 # Saiba mais sobre telemetria aqui: https://nextjs.org/telemetry
 # Desabilitar telemetria durante o build.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm run build
 
@@ -27,9 +27,9 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Desabilitar telemetria durante o runtime.
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -48,9 +48,9 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 # set hostname to localhost
-ENV HOSTNAME "0.0.0.0"
+ENV HOSTNAME=0.0.0.0
 
 # server.js é criado pelo next build usando a configuração standalone
 CMD ["node", "server.js"]
