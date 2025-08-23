@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import IconButton from "../components/iconbutton";
 
 import AccountActive from "../../public/icons/acconunt_active.png";
@@ -15,6 +17,7 @@ export default function SideBar() {
 
   // Inicializa ativo com o ID do primeiro botão
   const [ativo, setAtivo] = useState<number>(0);
+  const navigate = useNavigate();
 
   return (
     <section
@@ -27,14 +30,20 @@ export default function SideBar() {
             key={acao.id}
             imagem={acao.imagem}
             ativo={ativo === acao.id} // compara com o estado
-            onClick={() => setAtivo(acao.id)}
+            onClick={() => {
+              setAtivo(acao.id);
+              if (acao.id == 2) {
+                sessionStorage.clear();
+                navigate("/");
+              }
+            }}
           />
         ))}
       </div>
       <div>
         <p className="text-[0.875rem] text-[var(--muted)]">Logado como:</p>
         <p className="text-[0.875rem] text-[var(--body)]">
-          {localStorage.getItem("email")}
+          {sessionStorage.getItem("email")}
         </p>
       </div>
     </section>
