@@ -173,11 +173,13 @@ export default function TabelaContatos({
                       }}
                     />
                     <IconButton
+                      border={true}
                       imagem={desbloqueado ? CadeadoAberto : CadeadoFechado}
                       ativo={false}
                       onClick={() => abrirModalOuBloquear(idx)}
                     />
                     <IconButton
+                      border={true}
                       imagem={Lixeira}
                       ativo={false}
                       onClick={() => removerContato(contato.contato_id!)}

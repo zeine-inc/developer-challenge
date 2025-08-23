@@ -74,6 +74,7 @@ export default function PageInicio() {
 
             {/* Cadeado global que abre modal de senha */}
             <IconButton
+              border={true}
               imagem={desbloquearTodos ? CadeadoAberto : CadeadoFechado}
               ativo={false}
               onClick={() => {
