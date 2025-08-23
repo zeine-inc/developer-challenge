@@ -61,6 +61,31 @@ export async function login({ ...props }: InterfaceLogin) {
   }
 }
 
+export async function editarVendedor(
+  id: number,
+  nome?: string,
+  senha?: string
+) {
+  const vendedor: any = { id };
+  if (nome) vendedor.nome = nome;
+  if (senha) vendedor.senha = senha;
+
+  try {
+    const response = await fetch(`${apiUrl}/vendedor/editarVendedor`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(vendedor),
+    });
+
+    return response.status;
+  } catch (e) {
+    console.error(`Erro ao editar vendedor: ${e}`);
+    return 500;
+  }
+}
+
 export async function pegarContatos(id_vendedor: number) {
   try {
     const response = await fetch(
