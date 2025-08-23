@@ -45,35 +45,39 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
     }
   }, [tipo, contato]);
 
+  // Centraliza o tratamento de resposta
+  const lidarResponse = async (request: () => Promise<number>) => {
+    setLabelButton("Salvando...");
+    try {
+      const responseStatus = await request();
+      if (responseStatus === 200) {
+        setLabelButton("Contato Salvo");
+        setTimeout(() => onClose(), 1000);
+      } else {
+        setLabelButton("Erro ao salvar");
+        setTimeout(() => setLabelButton("Salvar"), 2000);
+      }
+    } catch (e) {
+      console.error(e);
+      setLabelButton("Erro ao salvar");
+      setTimeout(() => setLabelButton("Salvar"), 2000);
+    }
+  };
+
   const salvarContato = async () => {
     if (!id_vendedor) return;
 
     if (tipo.toLowerCase() === "edit" && contato) {
-      // Cópia para guardar apenas informações alteradas.
-      let copiaContato: any = { vendedor_id: Number(id_vendedor) };
+      const copiaContato: any = { vendedor_id: Number(id_vendedor) };
       copiaContato.contato_id = contato.contato_id;
 
-      if (nome !== contato!.nome) copiaContato.nome = nome;
+      if (nome !== contato.nome) copiaContato.nome = nome;
       if (email !== contato.email) copiaContato.email = email;
       if (telefone !== contato.telefone) copiaContato.telefone = telefone;
       if (relacao !== contato.relacao) copiaContato.relacao = relacao;
       if (foto !== contato.foto && fotoFile) copiaContato.foto = fotoFile;
-      setLabelButton("Salvando...");
-      try {
-        const responseStatus = await editarContato(copiaContato);
 
-        if (responseStatus === 200) {
-          setLabelButton("Contato Salvo");
-          setTimeout(() => onClose(), 1000);
-        } else {
-          setLabelButton("Erro ao salvar");
-          setTimeout(() => setLabelButton("Salvar"), 2000);
-        }
-      } catch (e) {
-        console.error(e);
-        setLabelButton("Erro ao salvar");
-        setTimeout(() => setLabelButton("Salvar"), 2000);
-      }
+      await lidarResponse(() => editarContato(copiaContato));
     } else {
       const novoContato: Contato = {
         nome,
@@ -82,25 +86,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
         relacao,
         foto: fotoFile as File,
       };
-      setLabelButton("Salvando...");
-      try {
-        const responseStatus = await adicionarContato(
-          novoContato,
-          id_vendedor!
-        );
-
-        if (responseStatus === 200) {
-          setLabelButton("Contato Salvo");
-          setTimeout(() => onClose(), 1000);
-        } else {
-          setLabelButton("Erro ao salvar");
-          setTimeout(() => setLabelButton("Salvar"), 2000);
-        }
-      } catch (e) {
-        console.error(e);
-        setLabelButton("Erro ao salvar");
-        setTimeout(() => setLabelButton("Salvar"), 2000);
-      }
+      await lidarResponse(() => adicionarContato(novoContato, id_vendedor));
     }
   };
 
@@ -136,7 +122,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
           />
         </div>
 
-        {/* Input senha */}
+        {/* Inputs */}
         <div className="p-[0.5rem] flex flex-col gap-5">
           <TextField
             input={nome}
@@ -168,7 +154,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
           />
         </div>
 
-        <hr className="h-px w-[90%] my-3  bg-[var(--muted)]" />
+        <hr className="h-px w-[90%] my-3 bg-[var(--muted)]" />
 
         {/* Ações */}
         <div className="flex gap-2 justify-end mt-[2rem]">
