@@ -102,3 +102,22 @@ Retorna todos os contatos associados a um vendedor específico.
 @app.get("/vendedor/{vendedor_id}/contatos")
 def listar_contatos_vendedor(vendedor_id: int = Path(...))
 ```
+
+## Rodando imagem com Docker 🐋
+
+Clonando o repositório
+
+```bash
+git clone https://github.com/andersonstack/developer-challenge.git
+cd developer-challenge
+
+```
+
+Fazendo o build das depedências
+
+```bash
+docker compose up --build -d
+```
+
+- **Backend** vai rodar no _localhost:8000_
+- **Frontend** vai rodar no _localhost:3000_
