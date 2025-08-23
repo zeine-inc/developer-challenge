@@ -4,29 +4,22 @@ import Lupa from "../../public/icons/search.png";
 import CadeadoFechado from "../../public/icons/lock.png";
 import CadeadoAberto from "../../public/icons/lock_open.png";
 
-import type { Contato } from "../interfaces/interfaces";
-
 import SideBar from "../components/sidebar";
 import TextField from "../components/text_field";
 import Button, { ButtonVariant } from "../components/button";
 import IconButton from "../components/iconbutton";
 import FiltroAlfabeto from "../components/filtrar";
 import TabelaContatos from "../components/tabela_contatos";
-import ModalContato from "../components/modalContato";
 import ModalInformacoes from "../components/modalInformacoes";
+import ModalContato from "../components/modalContato";
 
 export default function PageInicio() {
   const [busca, setBusca] = useState<string>("");
   const [letraFiltar, setLetraFiltrar] = useState<string>("");
-  const [mostrarModalContato, setMostrarModalContato] =
-    useState<boolean>(false);
-  const [contatoSelecionado, setContatoSelecionado] = useState<
-    Contato | undefined
-  >();
-  const [tipoModal, setTipoModal] = useState<string>("add");
-
   const [desbloquearTodos, setDesbloquearTodos] = useState<boolean>(false);
   const [modalSenhaGlobal, setModalSenhaGlobal] = useState<boolean>(false);
+  const [modalAdicionarContato, setModalAdicionarContato] =
+    useState<boolean>(false);
 
   return (
     <section aria-label="Página de contatos" className="flex">
@@ -52,10 +45,7 @@ export default function PageInicio() {
             <Button
               label="+ Adicionar contato"
               variant={ButtonVariant.Secondary}
-              onClick={() => {
-                setMostrarModalContato(true);
-                setTipoModal("add");
-              }}
+              onClick={() => setModalAdicionarContato(true)}
             />
 
             {/* Cadeado global que abre modal de senha */}
@@ -88,13 +78,6 @@ export default function PageInicio() {
             </div>
 
             <TabelaContatos
-              onEditar={(contato) => {
-                if (contato != null) {
-                  setTipoModal("edit");
-                  setContatoSelecionado(contato);
-                  setMostrarModalContato(true);
-                }
-              }}
               desbloquearTodos={desbloquearTodos}
               filtrar={letraFiltar}
             />
@@ -116,11 +99,10 @@ export default function PageInicio() {
         />
       )}
 
-      {mostrarModalContato && (
+      {modalAdicionarContato && (
         <ModalContato
-          tipo={tipoModal}
-          contato={contatoSelecionado}
-          onClose={() => setMostrarModalContato(false)}
+          tipo="add"
+          onClose={() => setModalAdicionarContato(false)}
         />
       )}
     </section>

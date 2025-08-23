@@ -1,23 +1,24 @@
 import { useState } from "react";
+
 import Button, { ButtonVariant } from "../components/button";
 import IconButton from "../components/iconbutton";
 import ModalInformacoes from "./modalInformacoes";
-import { excluirContato } from "../service/service";
+import ModalContato from "./modalContato";
 
 import type { Contato } from "../interfaces/interfaces";
+
+import { excluirContato } from "../service/service";
 
 import CadeadoFechado from "../../public/icons/lock.png";
 import CadeadoAberto from "../../public/icons/lock_open.png";
 import Lixeira from "../../public/icons/remove.png";
 
 interface TabelaContatosProps {
-  onEditar: (contato: Contato) => void;
   desbloquearTodos: boolean;
   filtrar: string;
 }
 
 export default function TabelaContatos({
-  onEditar,
   desbloquearTodos,
   filtrar,
 }: TabelaContatosProps) {
@@ -29,6 +30,12 @@ export default function TabelaContatos({
   const [modalAberto, setModalAberto] = useState(false);
   const [contatoAtualIdx, setContatoAtualIdx] = useState<number | null>(null);
   const [desbloqueados, setDesbloqueados] = useState<number[]>([]);
+  const [mostrarModalContato, setMostrarModalContato] =
+    useState<boolean>(false);
+  const [contatoSelecionado, setContatoSelecionado] = useState<
+    Contato | undefined
+  >();
+  const [tipoModal, setTipoModal] = useState<string>("add");
 
   const contatosFiltrados = contatos
     .filter((c) =>
@@ -94,7 +101,7 @@ export default function TabelaContatos({
     <>
       <table className="w-full ml-8 border-separate border-spacing-0 overflow-x-hidden overflow-y-scroll">
         <thead>
-          <tr className="text-left">
+          <tr key={"tr-table"} className="text-left">
             <th className="text-[var(--muted)] text-[0.75rem] font-bold w-[40%] pb-4">
               NOME
             </th>
@@ -153,7 +160,11 @@ export default function TabelaContatos({
                     <Button
                       label="Editar"
                       variant={ButtonVariant.Secondary}
-                      onClick={() => onEditar(contato)}
+                      onClick={() => {
+                        setTipoModal("edit");
+                        setContatoSelecionado(contato);
+                        setMostrarModalContato(true);
+                      }}
                     />
                     <IconButton
                       imagem={desbloqueado ? CadeadoAberto : CadeadoFechado}
@@ -163,7 +174,7 @@ export default function TabelaContatos({
                     <IconButton
                       imagem={Lixeira}
                       ativo={false}
-                      onClick={() => removerContato(contato.id)}
+                      onClick={() => removerContato(contato.id!)}
                     />
                   </div>
                 </td>
@@ -177,6 +188,14 @@ export default function TabelaContatos({
         <ModalInformacoes
           onClose={() => setModalAberto(false)}
           onConfirm={confirmarSenha}
+        />
+      )}
+
+      {mostrarModalContato && (
+        <ModalContato
+          tipo={tipoModal}
+          contato={contatoSelecionado}
+          onClose={() => setMostrarModalContato(false)}
         />
       )}
     </>
