@@ -159,9 +159,44 @@ export async function editarContato(contato: any) {
         body: formData,
       }
     );
+
+    if (response.ok) {
+      const data = await response.json();
+
+      const contatoAtualizado = {
+        contato_id: data.contato_id,
+        nome: data.nome,
+        email: data.email,
+        telefone: data.telefone,
+        foto: data.foto,
+        relacao: data.relacao,
+      };
+
+      editarContatoNaSessionStorage(contatoAtualizado);
+    }
+
     return response.status;
   } catch (e) {
     console.error("Erro ao editar contato:", e);
     return 500;
+  }
+}
+
+function editarContatoNaSessionStorage(contatoAtualizado: any) {
+  try {
+    const contatosRaw = sessionStorage.getItem("contatos");
+    if (!contatosRaw) return;
+
+    let contatos = JSON.parse(contatosRaw);
+
+    contatos = contatos.map((c: any) =>
+      c.contato_id === contatoAtualizado.contato_id
+        ? { ...c, ...contatoAtualizado }
+        : c
+    );
+
+    sessionStorage.setItem("contatos", JSON.stringify(contatos));
+  } catch (e) {
+    console.error("Erro ao atualizar contato na sessionStorage:", e);
   }
 }
