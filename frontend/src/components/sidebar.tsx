@@ -11,7 +11,11 @@ import LogoutActive from "../../public/icons/logout_active.png";
 import Logout from "../../public/icons/logout.png";
 import Logo from "../../public/icons/logo.png";
 
-export default function SideBar() {
+export default function SideBar({
+  mudarPagina,
+}: {
+  mudarPagina: (id: number) => void;
+}) {
   const acoesIcones = [
     { id: 0, imagemAtivado: AccountActive, imagemDesativado: Account },
     { id: 1, imagemAtivado: SettingActive, imagemDesativado: Setting },
@@ -48,6 +52,8 @@ export default function SideBar() {
               if (acao.id === 2) {
                 sessionStorage.clear();
                 navigate("/");
+              } else {
+                mudarPagina(acao.id);
               }
             }}
           />
