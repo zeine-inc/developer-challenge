@@ -22,7 +22,8 @@
   - [3. Cadastar contato](#3-cadastar-contato)
   - [4. Editar contato](#4-editar-contato)
   - [5. Listar Contatos do Vendedor](#5-listar-contatos-do-vendedor)
-- [Rodando imagem com Docker](#rodando-imagem-com-docker)
+- [Rodando aplicação com o Docker](#rodando-aplicação-com-o-docker)
+- [Rodando aplicação sem o docker](#rodando-aplicação-sem-o-docker)
 - [Links de deploy](#links-de-deploy)
 
 ---
@@ -322,7 +323,7 @@ Retorna todos os contatos associados a um vendedor específico.
 def listar_contatos_vendedor(vendedor_id: int = Path(...))
 ```
 
-## Rodando imagem com Docker
+## Rodando aplicação com o Docker
 
 ### 1. Clone o repositório
 
@@ -334,8 +335,8 @@ cd developer-challenge
 ### 2. Crie os arquivos .env a partir dos exemplos
 
 ```bash
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
+cp backend/.env.docker backend/.env
+cp frontend/.env.docker frontend/.env
 ```
 
 ### 3. Suba os containers com Docker Compose
@@ -352,6 +353,60 @@ docker compose up --build -d
 
 - **Backend** vai rodar no _localhost:8000_
 - **Frontend** vai rodar no _localhost:3000_
+
+## Rodando aplicação sem o docker
+
+```bash
+cp backend/.env.development backend/.env
+cp frontend/.env.development frontend/.env
+```
+
+### Banco de dados
+
+#### 1. Instalando o postgres
+
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+```
+
+#### 2. Entrando no terminal do postgres
+
+```bash
+sudo -u postgres psql
+```
+
+#### 3. Criando usuário e banco de dados
+
+```bash
+CREATE USER "user" WITH PASSWORD 'password';
+CREATE DATABASE mydb OWNER "user";
+GRANT ALL PRIVILEGES ON DATABASE mydb TO "user";
+\q
+```
+
+### Backend (Linux)
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+uvicorn main:app --reload
+```
+
+### Frontend (Linux)
+
+#### 1. Configurando a conexão no _.env_ do FRONTEND
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+- **Backend** vai rodar no _localhost:8000_
+- **Frontend** vai rodar no _localhost:3000_
+- **Postgres** vai rodar no _localhost:5432_
 
 ## Links de deploy
 
