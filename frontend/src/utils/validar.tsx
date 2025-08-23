@@ -7,3 +7,8 @@ export function validarSenha(senha: string) {
   const senhaRegex = /^(?=.*[\d\W]).{8,}$/;
   return senhaRegex.test(senha);
 }
+
+export function validarTelefone(telefone: string) {
+  const telefoneRegex = /^\d{11}$/;
+  return telefoneRegex.test(telefone);
+}
