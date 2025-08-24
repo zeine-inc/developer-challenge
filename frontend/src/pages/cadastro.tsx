@@ -40,7 +40,14 @@ export function PageCadastro() {
     },
   ];
 
+  const formValido =
+    nome.trim().length > 0 &&
+    emailValido(email) &&
+    validarSenha(senha) &&
+    senha === senhaConfirmada;
+
   const fazerCadastro = async () => {
+    if (!formValido) return;
     const responseStatus = await cadastrar({
       nome: nome,
       senha: senha,
@@ -139,6 +146,7 @@ export function PageCadastro() {
             label="Criar conta"
             variant={ButtonVariant.Primary}
             onClick={fazerCadastro}
+            disabled={!formValido}
           />
         </div>
         <p

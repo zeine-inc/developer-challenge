@@ -46,6 +46,12 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
     }
   }, [tipo, contato]);
 
+  const formValido =
+    nome.trim().length > 0 &&
+    validarTelefone(telefone) &&
+    emailValido(email) &&
+    relacao.trim().length > 0;
+
   // Centraliza o tratamento de resposta
   const lidarResponse = async (request: () => Promise<number>) => {
     setLabelButton("Salvando...");
@@ -66,7 +72,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
   };
 
   const salvarContato = async () => {
-    if (!id_vendedor) return;
+    if (!id_vendedor || !formValido) return;
 
     if (tipo.toLowerCase() === "edit" && contato) {
       const copiaContato: any = { vendedor_id: Number(id_vendedor) };
@@ -174,6 +180,7 @@ export default function ModalContato({ onClose, tipo, contato }: ModalProps) {
             label={labelButton}
             variant={ButtonVariant.Primary}
             onClick={salvarContato}
+            disabled={!formValido}
           />
         </div>
       </div>

@@ -10,6 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   variant?: ButtonVariant;
   icon?: string;
+  disabled?: boolean;
 }
 
 export default function Button({
@@ -17,10 +18,12 @@ export default function Button({
   variant = ButtonVariant.Primary,
   icon,
   onClick,
+  disabled = false, // valor padrão
   ...props
 }: ButtonProps) {
-  const baseClasses =
-    "cursor-pointer px-4 py-2 rounded-2xl font-medium transition-colors duration-200 z-10 flex items-center justify-center gap-2";
+  const baseClasses = `${
+    disabled ? "cursor-not-allowed" : "cursor-pointer"
+  } px-4 py-2 rounded-2xl font-medium transition-colors duration-200 z-10 flex items-center justify-center gap-2`;
 
   let variantClasses = "";
 
@@ -39,10 +42,15 @@ export default function Button({
       "border border-[var(--border-primary)] bg-transparent text-[var(--primary)] hover:bg-[var(--background-tertiary)]";
   }
 
+  const disabledClasses = disabled
+    ? "opacity-50 cursor-not-allowed hover:bg-none"
+    : "";
+
   return (
     <button
       onClick={onClick}
-      className={`${baseClasses} ${variantClasses}`}
+      disabled={disabled}
+      className={`${baseClasses} ${variantClasses} ${disabledClasses}`}
       {...props}>
       {icon ? (
         <img src={icon} className="w-[1rem] h-[1rem] flex-shrink-0" />
