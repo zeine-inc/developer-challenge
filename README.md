@@ -1,122 +1,429 @@
-# Desafio Técnico | Guard - Gerenciador de Contatos 💂‍♂️
+# 📑 Sumário
 
-![Capa](./images/cover.jpg)
-
-## 🎯 Objetivo
-
-Desenvolver 3 telas de um sistema web para **gestão de contatos em um marketplace**, baseado no design fornecido via Figma.
-
-O sistema simula o **painel de controle de um vendedor**, onde é possível cadastrar, visualizar e gerenciar seus contatos.
-
-- **Protótipo Figma**:
-  [https://www.figma.com/community/file/1426246785677931248](https://www.figma.com/community/file/1426246785677931248)
-
-- **Prazo de entrega**:
-  4 dias a partir do recebimento.
-
----
-
-## 📌 Requisitos
-
-### Funcionalidades obrigatórias
-
-As seguintes telas e recursos devem ser implementados:
-
-1. **Tela de Login**
-
-   - Autenticação com e-mail e senha.
-   - Validação de campos.
-
-2. **Tela de Listagem de Contatos**
-
-   - Exibe todos os contatos cadastrados.
-   - Permite filtro por letra inicial do nome.
-   - Contatos exibidos com foto, nome, telefone e e-mail.
-
-3. **Tela de Cadastro de Contato**
-
-   - Upload de foto do contato.
-   - Campos para nome, telefone, e-mail.
-   - Botões para **Salvar** ou **Cancelar**.
-
-4. **Backend Funcional**
-
-   - Deve suportar o armazenamento de usuários, autenticação, contatos e seus atributos.
-
-5. **Banco de dados**
-
-   - PostgreSQL ou MongoDB (ou outro de sua escolha, se bem justificado).
-
-6. **Mensagem secreta**
-
-   - Ao manter o mouse sobre o botão “Adicionar contato” por 7 segundos, surge um tooltip especial:
-     `“Tá esperando o quê? Boraa moeer!! 🚀”`
+- [Painel de Controle de Vendedor](#painel-de-controle-de-vendedor)
+- [Modelagem do Banco de Dados](#modelagem-do-banco-de-dados)
+  - [Diagrama ER (Crow’s Foot)](#diagrama-er-crows-foot)
+- [Documentação - Caso de Uso](#documentação---caso-de-uso)
+  - [1. Login do Vendedor](#1-login-do-vendedor)
+  - [2. Cadastro do Vendedor](#2-cadastro-do-vendedor)
+  - [3. Cadastrar Contato](#3-cadastrar-contato)
+  - [4. Editar Contato](#4-editar-contato)
+  - [5. Listar Contatos do Vendedor](#5-listar-contatos-do-vendedor)
+  - [6. Visualizar Informações do Contato](#6-visualizar-informações-do-contato)
+- [Tecnologias utilizadas](#tecnologias-utilizadas)
+  - [React + Vite](#react--vite)
+  - [FastAPI](#fastapi)
+  - [Postgres](#postgres)
+  - [Cloudinary](#cloudinary)
+  - [Deploys](#deploys)
+- [Endpoints da API](#endpoints-da-api)
+  - [1. Login](#1-login)
+  - [2. Cadastro](#2-cadastro)
+  - [3. Cadastar contato](#3-cadastar-contato)
+  - [4. Editar contato](#4-editar-contato)
+  - [5. Listar Contatos do Vendedor](#5-listar-contatos-do-vendedor)
+- [Rodando aplicação com o Docker](#rodando-aplicação-com-o-docker)
+- [Rodando aplicação sem o docker](#rodando-aplicação-sem-o-docker)
+- [Links de deploy](#links-de-deploy)
+- [Vídeo mostrando a aplicação](#vídeo-mostrando-a-aplicação)
 
 ---
 
-### Diferenciais (opcionais, mas recomendados)
+# Painel de Controle de Vendedor
 
-1. **Deploy**
-
-   - Publique o front-end (ex: Vercel) e o back-end (ex: Render) se possível.
-   - Inclua os links no README.
-
-2. **Documentação**
-
-   - Explique a estrutura do projeto, como executar, e decisões técnicas.
-
-3. **Testes automatizados**
-
-   - Testes simples de integração (API) e/ou de componentes (UI).
-
-4. **Diagrama ERD**
-
-   - Um pequeno diagrama mostrando entidades e relações (usuários, contatos, atributos).
+Este projeto é um **Painel de Controle para Vendedores**, permitindo que vendedores se cadastrem, façam login e gerenciem seus contatos.
 
 ---
 
-## 🛠️ Stacks recomendadas
+# Modelagem do Banco de Dados
 
-Você pode usar qualquer tecnologia, mas sugerimos:
+O banco de dados possui três tabelas principais:
 
-- **Frontend**: Next.js ou React (web)
-- **Backend**: FastAPI ou NestJS
-- **Banco de dados**: PostgreSQL ou MongoDB
+- **VENDEDOR**: armazena os dados do vendedor.
+- **CONTATO**: armazena os contatos gerenciados pelo vendedor.
+- **VENDEDOR_CONTATO**: tabela intermediária que representa o relacionamento muitos-para-muitos entre vendedores e contatos.
+
+### Diagrama ER (Crow’s Foot)
+
+```mermaid
+erDiagram
+    VENDEDOR {
+        int id PK
+        string nome
+        string email
+        string senha
+    }
+
+    CONTATO {
+        int id PK
+        string nome
+        string email
+        string telefone
+        string foto
+    }
+
+    VENDEDOR_CONTATO {
+        int id_vendedor FK
+        int id_contato FK
+        string relacao
+    }
+
+    VENDEDOR ||--o{ VENDEDOR_CONTATO : "tem"
+    CONTATO ||--o{ VENDEDOR_CONTATO : "é gerenciado"
+```
+
+## Documentação - Caso de Uso
+
+![Caso de Uso](./CASO%20DE%20USO.svg)
+
+### 1. Login do Vendedor
+
+**Ator:** Vendedor  
+**Objetivo:** Permitir que o vendedor acesse o sistema  
+**Pré-condições:** O vendedor deve estar cadastrado com email e senha
+
+**Fluxo Principal:**
+
+1. Vendedor envia email e senha para `/login`.
+2. Sistema valida credenciais.
+3. Sistema retorna token de autenticação.
+
+**Fluxos Alternativos:**
+
+- **Email ou senha incorretos:**  
+  2a. Sistema detecta erro nas credenciais.  
+  2b. Sistema retorna mensagem de erro ao vendedor.
+
+**Pós-condições:** Vendedor autenticado e apto a acessar funcionalidades restritas
 
 ---
 
-## 📦 Entregáveis
+### 2. Cadastro do Vendedor
 
-1. **Repositório com o código-fonte**
+**Ator:** Vendedor  
+**Objetivo:** Criar uma nova conta de vendedor  
+**Pré-condições:** O vendedor não deve estar cadastrado com o email informado
 
-   - GitHub, GitLab ou Bitbucket.
+**Fluxo Principal:**
 
-2. **Instruções de execução**
+1. Vendedor envia **nome**, **email** e **senha** para `/cadastro`.
+2. Sistema verifica se email está em uso.
+3. Sistema cria a conta.
 
-   - Como rodar o frontend e backend localmente.
-   - Se possível, um script ou Docker.
+**Fluxos Alternativos:**
 
-3. **Demonstração visual**
+- **Email já em uso:**  
+  2a. Sistema detecta email duplicado.  
+  2b. Sistema retorna mensagem informando que o email já está cadastrado.
 
-   - Imagens ou vídeo da aplicação em funcionamento.
+- **Senha inválida (muito curta ou sem caracteres especiais):**  
+  2a. Sistema valida senha.  
+  2b. Sistema retorna mensagem de erro solicitando senha válida.
 
-4. **(Opcional) Link do Deploy**
+**Pós-condições:** Vendedor cadastrado e apto a fazer login
 
-   - Front e/ou back publicado.
+## 3. Cadastrar Contato
+
+**Ator:** Vendedor  
+**Objetivo:** Adicionar um novo contato à sua lista  
+**Pré-condições:** Vendedor autenticado
+
+**Fluxo Principal:**
+
+1. Vendedor envia **nome**, **email**, **telefone**, **foto** e **relacao** para `/cadastrarContato`.
+2. Sistema valida dados.
+3. Sistema cria o contato vinculado ao vendedor.
+
+**Fluxos Alternativos:**
+
+- **Dados incompletos ou inválidos:**  
+  2a. Sistema detecta inconsistência nos dados.  
+  2b. Sistema retorna mensagem de erro solicitando correção.
+
+**Pós-condições:** Contato armazenado e vinculado ao vendedor
 
 ---
 
-## 🔍 O que será avaliado
+### 4. Editar Contato
 
-- Organização e clareza do código
-- Estrutura do projeto
-- Boas práticas de autenticação e manipulação de dados
-- UX simples e funcional
-- Atenção aos detalhes (como a mensagem secreta 👀)
+**Ator:** Vendedor  
+**Objetivo:** Atualizar informações de um contato existente  
+**Pré-condições:** Vendedor autenticado e contato existente
+
+**Fluxo Principal:**
+
+1. Vendedor envia dados atualizados (**nome**, **email**, **telefone**, **foto**, **relacao**) para `/editarContato/{vendedor_id}/{contato_id}`.
+2. Sistema valida informações.
+3. Sistema atualiza o contato.
+
+**Fluxos Alternativos:**
+
+- **Contato não encontrado:**  
+  2a. Sistema verifica se contato existe.  
+  2b. Sistema retorna mensagem de erro informando que o contato não foi encontrado.
+
+- **Dados inválidos:**  
+  2a. Sistema detecta erro nos dados enviados.  
+  2b. Sistema retorna mensagem solicitando correção.
+
+**Pós-condições:** Contato atualizado com novas informações
 
 ---
 
-## 📩 Dúvidas?
+### 5. Listar Contatos do Vendedor
 
-Se tiver qualquer dúvida durante o desafio, envie uma mensagem. Estamos aqui para ajudar. Boa sorte e...
-**Boraa moeer!! 🔥🚀**
+**Ator:** Vendedor  
+**Objetivo:** Visualizar todos os contatos cadastrados  
+**Pré-condições:** Vendedor autenticado
+
+**Fluxo Principal:**
+
+1. Vendedor solicita a lista de contatos via `/vendedor/{vendedor_id}/contatos`.
+2. Sistema retorna todos os contatos do vendedor.
+
+**Fluxos Alternativos:**
+
+- **Nenhum contato cadastrado:**  
+  2a. Sistema detecta lista vazia.  
+  2b. Sistema retorna mensagem informando que não há contatos cadastrados.
+
+**Pós-condições:** Vendedor visualiza a lista completa de contatos
+
+---
+
+### 6. Visualizar Informações do Contato
+
+**Ator:** Vendedor  
+**Objetivo:** Visualizar informações detalhadas do contato  
+**Pré-condições:** Vendedor autenticado
+
+**Fluxo Principal:**
+
+1. Vendedor solicita informações do contato.
+2. Sistema solicita a senha do vendedor.
+3. Vendedor informa a senha.
+4. Sistema disponibiliza informações do contato na UI.
+
+**Fluxos Alternativos:**
+
+- **Senha incorreta:**  
+  3a. Sistema detecta senha incorreta.  
+  3b. Sistema retorna mensagem de erro solicitando nova tentativa.
+
+- **Contato não encontrado:**  
+  1a. Sistema verifica existência do contato.  
+  1b. Sistema retorna mensagem informando que o contato não existe.
+
+**Pós-condições:** Vendedor visualiza as informações do contato com segurança
+
+---
+
+### 7. Mudar nome ou senha
+
+**Ator:** Vendedor  
+**Objetivo:** Alterar dados (nome ou senha) <br>
+**Pré-condições:** Vendedor autenticado
+
+**Fluxo Principal:**
+
+1. Vendedor preenche os campos que deseja modificar.
+2. O sistema valida os campos.
+3. O sistema modidica os campos alterados.
+
+**Fluxos Alternativos:**
+
+- **Campos inconsistentes**  
+  2a. Sistema não valida as informações.  
+  2b. Sistema retorna uma mensagem de erro informando dos sobre os campos inválidos.
+
+**Pós-condições:** Vendedor com dados (nome ou senha) alterados.
+
+## Tecnologias utilizadas
+
+### React + Vite
+
+No front-end, optei por utilizar React junto com Vite para desenvolver uma solução rápida e eficiente, aproveitando meu conhecimento prévio nessas tecnologias. Para estilização, utilizei **Tailwind CSS**, permitindo criar estilos de forma mais dinâmica, responsiva e consistente.
+
+### FastAPI
+
+No back-end, utilizei **FastAPI** devido à sua simplicidade e eficiência na manipulação de bancos de dados, tornando mais ágil a execução de queries e o gerenciamento das rotas da API.
+
+### Postgres
+
+Escolhi **PostgreSQL** por ser um banco de dados relacional robusto, que facilita consultas complexas envolvendo múltiplas tabelas. Para otimizar o armazenamento, utilizei Cloudinary para hospedar imagens, evitando que arquivos binários poluam o banco e retornando apenas os links das imagens no servidor.
+
+### Cloudinary
+
+Durante o desenvolvimento, utilizei minha **API key** do Cloudinary para testes locais. É importante destacar que, embora isso seja conveniente para desenvolvimento, não é uma boa prática em produção. No deploy, todas as variáveis sensíveis foram corretamente armazenadas em locais seguros.
+
+### Deploys
+
+O projeto foi deployado no **Render** e na **Vercel**, plataformas gratuitas e de fácil utilização, garantindo que a aplicação esteja disponível online de forma prática e confiável.
+
+## Endpoints da API
+
+A api, localmente, rodará na porta **8000**. Para visualizar as requisições visualmente, utilizar **localhost/8000/docs**.
+
+### 1. Login
+
+O **vendedor** pode fazer login utilizando email e senha.
+
+```python
+@vendedor.post("/login")
+def login_vendedor(vendedor: VendedorLogin)
+```
+
+### 2. Cadastro
+
+O vendedor pode se cadastrar utilizando **nome**, **email** e **senha**.
+
+```python
+@vendedor.post("/cadastro")
+def cadastrar_vendedor(vendedor: VendedorLogin):
+```
+
+### 3. Cadastar contato
+
+Permite que um **vendedor** cadastre um novo contato com nome, email, telefone e foto.
+
+```python
+@contato.post("/cadastrarContato")
+def cadastrar_contatos(
+    vendedor_id: int,
+    nome: str = Form(...),
+    email: str = Form(...),
+    telefone: str = Form(...),
+    relacao: str = Form(...),
+    foto: UploadFile = File(...)
+)
+```
+
+### 4. Editar contato
+
+Permite atualizar os dados de um contato existente, incluindo nome, email, telefone e foto.
+
+```python
+@contato.put("/editarContato/{vendedor_id}/{contato_id}")
+def editar_contato(
+    vendedor_id: int = Path(...),
+    contato_id: int = Path(...),
+    nome: str = Form(None),
+    email: str = Form(None),
+    telefone: str = Form(None),
+    relacao: str = Form(None),
+    foto: UploadFile = File(None)
+)
+```
+
+### 5. Listar Contatos do Vendedor
+
+Retorna todos os contatos associados a um vendedor específico.
+
+```python
+@contato.get("/vendedor/{vendedor_id}/contatos")
+def listar_contatos_vendedor(vendedor_id: int = Path(...))
+```
+
+## Rodando aplicação com o Docker
+
+### Execução do script para Docker
+
+```bash
+git clone https://github.com/andersonstack/developer-challenge.git
+cd developer-challenge
+chmod +x run.sh
+./run.sh
+```
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/andersonstack/developer-challenge.git
+cd developer-challenge
+```
+
+### 2. Crie os arquivos .env a partir dos exemplos
+
+```bash
+cp backend/.env.docker backend/.env
+cp frontend/.env.docker frontend/.env
+```
+
+### 3. Suba os containers com Docker Compose
+
+```bash
+docker compose up --build -d
+```
+
+|                    | Tecnologia | Nome Container | Porta |
+| ------------------ | ---------- | -------------- | ----- |
+| **Banco de dados** | Postgres   | db             | 5432  |
+| **Backend**        | FastAPI    | backend        | 8000  |
+| **Frontend**       | React      | frontend       | 3000  |
+
+- **Backend** vai rodar no _localhost:8000_
+- **Frontend** vai rodar no _localhost:3000_
+
+## Rodando aplicação sem o docker
+
+```bash
+cp backend/.env.development backend/.env
+cp frontend/.env.development frontend/.env
+```
+
+### Banco de dados
+
+#### 1. Instalando o postgres
+
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+```
+
+#### 2. Entrando no terminal do postgres
+
+```bash
+sudo -u postgres psql
+```
+
+#### 3. Criando usuário e banco de dados
+
+```bash
+CREATE USER "user" WITH PASSWORD 'password';
+CREATE DATABASE mydb OWNER "user";
+GRANT ALL PRIVILEGES ON DATABASE mydb TO "user";
+\q
+```
+
+### Backend (Linux)
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+uvicorn main:app --reload
+```
+
+### Frontend (Linux)
+
+#### 1. Configurando a conexão no _.env_ do FRONTEND
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+- **Backend** vai rodar no _localhost:8000_
+- **Frontend** vai rodar no _localhost:5173_
+- **Postgres** vai rodar no _localhost:5432_
+
+## Links de deploy
+
+- **Backend**: https://developer-challenge-backend.onrender.com/docs </br>
+
+- **Frontend**: https://developer-challenge-omega.vercel.app/
+
+## Vídeo mostrando a aplicação
+
+- **Youtube**: [Clique aqui para ir para o vídeo](https://youtu.be/QRlpxL4lHH0)

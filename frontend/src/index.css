@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+body {
+  font-family: "Schibsted Grotesk", regular;
+  background: #111111;
+  overflow-y: hidden;
+}
+
+:root {
+  --background-primary: #111111;
+  --background-secondary: #1b1b1b;
+  --background-tertiary: #303030;
+  --border-primary: #303030;
+  --primary: #ffffff;
+  --body: #e2e2e2;
+  --heading: #c6c6c6;
+  --muted: #5e5e5e;
+  --placeholder: #777777;
+  --inverse: #111111;
+  --brand: #c4f120;
+  --red: #e61e32;
+}
+
+/* CSS global */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
