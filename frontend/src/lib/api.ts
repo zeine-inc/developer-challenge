@@ -6,7 +6,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 // Classe para gerenciar requisições HTTP
 class ApiClient {
   private baseURL: string;
-  private defaultHeaders: HeadersInit;
+  private defaultHeaders: Record<string, string>;
 
   constructor(baseURL: string) {
     this.baseURL = baseURL;
@@ -26,16 +26,16 @@ class ApiClient {
   // Método para configurar headers da requisição
   private getHeaders(customHeaders?: HeadersInit): HeadersInit {
     const token = this.getAuthToken();
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       ...this.defaultHeaders,
-      ...customHeaders,
+      ...(customHeaders as Record<string, string>),
     };
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;
     }
 
-    return headers;
+    return headers as HeadersInit;
   }
 
   // Método para fazer requisições HTTP
@@ -289,6 +289,18 @@ export const productsAPI = {
   
   bulkActions: (data: { product_ids: string[]; action: string }) =>
     apiClient.post('/api/v1/products/bulk/actions', data),
+  
+  // Aliases para compatibilidade com o código existente
+  getProducts: (params?: any) =>
+    (productsAPI.list as any)(params),
+  getProduct: (id: string) =>
+    (productsAPI.get as any)(id),
+  createProduct: (data: any) =>
+    (productsAPI.create as any)(data),
+  updateProductStatus: (id: string, data: { status: string }) =>
+    (productsAPI.updateStatus as any)(id, data.status),
+  deleteProduct: (id: string) =>
+    (productsAPI.delete as any)(id),
 };
 
 export const usersAPI = {

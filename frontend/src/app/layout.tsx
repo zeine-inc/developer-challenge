@@ -90,37 +90,7 @@ export default function RootLayout({
             <div className="min-h-full">
               {children}
             </div>
-            <Toaster
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#fff',
-                  color: '#374151',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                },
-                success: {
-                  style: {
-                    border: '1px solid #22c55e',
-                    background: '#f0fdf4',
-                  },
-                },
-                error: {
-                  style: {
-                    border: '1px solid #ef4444',
-                    background: '#fef2f2',
-                  },
-                },
-                warning: {
-                  style: {
-                    border: '1px solid #f59e0b',
-                    background: '#fffbeb',
-                  },
-                },
-              }}
-            />
+            <Toaster position="top-right" />
           </AuthProvider>
         </QueryProvider>
       </body>

@@ -1,6 +1,4 @@
 {
-  "extends": ["next/babel", "next/core-web-vitals"],
-  "rules": {
-    // Regras personalizadas podem ser adicionadas aqui, se necessário
-  }
+  "extends": ["next/core-web-vitals"],
+  "rules": {}
 }

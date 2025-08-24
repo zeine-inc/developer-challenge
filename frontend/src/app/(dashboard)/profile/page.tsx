@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { 
-  User, 
+  User as UserIcon, 
   Mail, 
   Phone, 
   Camera, 
@@ -18,7 +18,8 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-import { usersAPI, showApiError, showApiSuccess } from '@/lib/api';
+import { usersAPI, authAPI, showApiError, showApiSuccess } from '@/lib/api';
+import type { User as AppUser } from '@/types';
 
 // Schema de validação para perfil
 const profileSchema = z.object({
@@ -95,7 +96,7 @@ function AvatarUpload({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <User className="w-8 h-8 text-gray-400" />
+              <UserIcon className="w-8 h-8 text-gray-400" />
             </div>
           )}
         </div>
@@ -135,9 +136,9 @@ export default function ProfilePage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Buscar dados do usuário
-  const { data: user, isLoading } = useQuery({
+  const { data: user, isLoading } = useQuery<AppUser>({
     queryKey: ['user-profile'],
-    queryFn: () => usersAPI.getProfile(),
+    queryFn: () => usersAPI.getProfile() as Promise<AppUser>,
   });
 
   // Formulário de perfil
@@ -179,7 +180,10 @@ export default function ProfilePage() {
 
   // Alterar senha
   const changePasswordMutation = useMutation({
-    mutationFn: (data: PasswordFormData) => usersAPI.changePassword(data),
+    mutationFn: (data: PasswordFormData) => authAPI.changePassword({
+      current_password: data.currentPassword,
+      new_password: data.newPassword,
+    }),
     onSuccess: () => {
       showApiSuccess('Senha alterada com sucesso!');
       resetPasswordForm();
@@ -243,18 +247,18 @@ export default function ProfilePage() {
         {/* Informações do perfil */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center">
-            <User className="w-5 h-5 mr-2" />
+            <UserIcon className="w-5 h-5 mr-2" />
             Informações pessoais
           </h2>
 
-          <form onSubmit={handleProfileSubmit} className="space-y-6">
+          <form onSubmit={handleProfileSubmit(onProfileSubmit)} className="space-y-6">
             {/* Avatar */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-3">
                 Foto do perfil
               </label>
               <AvatarUpload
-                currentAvatar={user?.avatarUrl}
+                currentAvatar={user?.avatarUrl ?? null}
                 onAvatarChange={handleAvatarChange}
               />
             </div>
@@ -370,7 +374,7 @@ export default function ProfilePage() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-4">
                 {/* Senha atual */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

@@ -71,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (credentials: LoginCredentials) => {
     try {
       setLoading(true);
-      const response: AuthResponse = await authAPI.login(credentials);
+      const response = (await authAPI.login(credentials)) as unknown as AuthResponse;
 
       // Salvar tokens e dados do usuário
       localStorage.setItem('accessToken', response.accessToken);
@@ -94,12 +94,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (data: RegisterData) => {
     try {
       setLoading(true);
-      const response: AuthResponse = await authAPI.register({
+      const response = (await authAPI.register({
         email: data.email,
         password: data.password,
         full_name: data.fullName,
         phone: data.phone,
-      });
+      })) as unknown as AuthResponse;
 
       // Salvar tokens e dados do usuário
       localStorage.setItem('accessToken', response.accessToken);
@@ -139,14 +139,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const refreshToken = async () => {
+  const refreshToken = async (): Promise<void> => {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
       if (!refreshToken) {
         throw new Error('No refresh token available');
       }
 
-      const response: AuthResponse = await authAPI.refresh(refreshToken);
+      const response = (await authAPI.refresh(refreshToken)) as unknown as AuthResponse;
 
       // Atualizar tokens
       localStorage.setItem('accessToken', response.accessToken);
@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(response.user));
 
       setUser(response.user);
-      return true;
+      return;
     } catch (error) {
       console.error('Error refreshing token:', error);
       
@@ -165,7 +165,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       setUser(null);
       router.push('/login');
-      return false;
+      return;
     }
   };
 
