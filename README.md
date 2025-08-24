@@ -406,7 +406,7 @@ npm run dev
 ```
 
 - **Backend** vai rodar no _localhost:8000_
-- **Frontend** vai rodar no _localhost:3000_
+- **Frontend** vai rodar no _localhost:5173_
 - **Postgres** vai rodar no _localhost:5432_
 
 ## Links de deploy
