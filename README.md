@@ -326,6 +326,15 @@ def listar_contatos_vendedor(vendedor_id: int = Path(...))
 
 ## Rodando aplicação com o Docker
 
+### Execução do script para Docker
+
+```bash
+git clone https://github.com/andersonstack/developer-challenge.git
+cd developer-challenge
+chmod +x run.sh
+./run.sh
+```
+
 ### 1. Clone o repositório
 
 ```bash
