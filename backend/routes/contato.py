@@ -110,9 +110,9 @@ def editar_contato(
         if nome:
             contato.nome = nome
         if email:
-            contato.email = email
+            contato.email = criptografar_email(email)
         if telefone:
-            contato.telefone = telefone
+            contato.telefone = criptografar_telefone(telefone)
 
         # Upload de nova imagem, se fornecida
         if foto:
@@ -174,22 +174,30 @@ def listar_contatos_vendedor(vendedor_id: int = Path(...)):
             .all()
         )
 
-        # Retorna lista de contatos com relacao
-        contatos = [
-            {
+        contatos = []
+        for contato, relacao in contatos_assoc:
+            try:
+                email = descriptografar_email(contato.email) if contato.email else None
+            except Exception:
+                email = contato.email
+            try:
+                telefone = descriptografar_telefone(contato.telefone) if contato.telefone else None
+            except Exception:
+                telefone = contato.telefone
+
+            contatos.append({
                 "contato_id": contato.id,
                 "nome": contato.nome,
-                "email": descriptografar_email(contato.email),
-                "telefone": descriptografar_telefone(contato.telefone),
+                "email": email,
+                "telefone": telefone,
                 "foto": contato.foto,
                 "relacao": relacao
-            }
-            for contato, relacao in contatos_assoc
-        ]
+            })
 
         return {"status": 200, "contatos": contatos}
     finally:
         db.close()
+
 
 @router.put("/exlcuirContato")
 def excluir_contato(data: dict = Body(...)):
