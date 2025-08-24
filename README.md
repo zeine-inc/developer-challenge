@@ -25,6 +25,7 @@
 - [Rodando aplicação com o Docker](#rodando-aplicação-com-o-docker)
 - [Rodando aplicação sem o docker](#rodando-aplicação-sem-o-docker)
 - [Links de deploy](#links-de-deploy)
+- [Vídeo mostrando a aplicação](#vídeo-mostrando-a-aplicação)
 
 ---
 
@@ -413,3 +414,7 @@ npm run dev
 - **Backend**: https://developer-challenge-backend.onrender.com/docs </br>
 
 - **Frontend**: https://developer-challenge-omega.vercel.app/
+
+## Vídeo mostrando a aplicação
+
+- **Youtube**: [Clique aqui para ir para o vídeo](https://youtu.be/QRlpxL4lHH0)
