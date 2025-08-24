@@ -11,7 +11,7 @@ from utils.criptografar import (
 router = APIRouter(prefix="/contato", tags=["Contato"])
 
 @router.post("/cadastrarContato")
-async def cadastrar_contatos(
+def cadastrar_contatos(
     vendedor_id: int = Form(...),
     nome: str = Form(...),
     email: str = Form(...),
@@ -84,7 +84,7 @@ async def cadastrar_contatos(
         raise HTTPException(status_code=400, detail="Erro de integridade no banco de dados")
 
 @router.put("/editarContato/{vendedor_id}/{contato_id}")
-async def editar_contato(
+def editar_contato(
     vendedor_id: int = Path(...),
     contato_id: int = Path(...),
     nome: str = Form(None),
