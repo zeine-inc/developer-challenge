@@ -1,7 +1,6 @@
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
-// Ajuste o caminho conforme necessário; exemplo de caminho relativo:
-// Ajuste o caminho conforme necessário; exemplo de caminho relativo:
-// Try the relative path if alias is not configured:
 import {
   usersAPI,
   DashboardData,
@@ -21,14 +20,12 @@ export default function DashboardPage() {
   });
 
   if (isLoading) {
-    // ... (código de loading permanece o mesmo)
   }
 
   if (error) {
-    // ... (código de erro permanece o mesmo)
+    console.error('Error fetching dashboard data:', error);
   }
 
-  // Defina o tipo do fallback explicitamente
   const stats: DashboardStats = dashboardData?.stats || {
     totalProducts: 0,
     activeProducts: 0,
@@ -40,9 +37,5 @@ export default function DashboardPage() {
 
   const topProducts: TopProduct[] = dashboardData?.topProducts || [];
 
-  return (
-    <div className="space-y-6">
-      {/* ... (resto do JSX permanece o mesmo) */}
-    </div>
-  );
+  return <div className="space-y-6">{}</div>;
 }
